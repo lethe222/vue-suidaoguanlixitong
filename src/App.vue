@@ -12,4 +12,8 @@ html,
 #app {
   height: 100%;
 }
+/* .el-menu 去掉右侧边框*/
+.el-menu {
+  border-right: 0 !important;
+}
 </style>

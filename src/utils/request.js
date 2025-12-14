@@ -70,9 +70,11 @@ instance.interceptors.response.use(
     /*  const response = error.response  */
     const { response } = error
     if (response) {
-      errorHandler(response.status, response.info)
+      errorHandler(response.status, response.statusText)
+      return Promise.reject(response)
     } else {
       console.log('断网了')
+      return Promise.reject(error)
     }
   },
 )

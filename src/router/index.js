@@ -40,7 +40,7 @@ const router = createRouter({
           },
         },
         {
-          // 建设管理页面
+          // 施工监控检测
           path: '/build-manage',
           name: 'buildManage',
           // 使用动态导入实现路由级代码分割，提高应用性能
@@ -50,7 +50,7 @@ const router = createRouter({
           },
         },
         {
-          // 地质信息页面
+          // 超前地质预报
           path: '/geological-info',
           name: 'geologicalInfo',
           component: () => import('../views/GeologicalInfo/index.vue'),
@@ -59,7 +59,7 @@ const router = createRouter({
           },
         },
         {
-          // 项目信息页面
+          // 项目基础信息
           path: '/project-info',
           name: 'projectInfo',
           component: () => import('../views/ProjectInfo/index.vue'),
@@ -68,7 +68,7 @@ const router = createRouter({
           },
         },
         {
-          // 系统管理页面
+          // 系统信息管理
           path: '/system-manage',
           name: 'systemManage',
           component: () => import('../views/SystemManage/index.vue'),
@@ -77,7 +77,7 @@ const router = createRouter({
           },
         },
         {
-          // 隧道信息页面
+          // 隧道设计信息
           path: '/tunnel-info',
           name: 'tunnelInfo',
           component: () => import('../views/TunnelInfo/index.vue'),
@@ -86,10 +86,19 @@ const router = createRouter({
           },
         },
         {
-          // 工作管理页面
+          // 工作监督管理
           path: '/work-manage',
           name: 'workManage',
           component: () => import('../views/WorkManage/index.vue'),
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          // 个人中心
+          path: '/userCenter',
+          name: 'userCenter',
+          component: () => import('../views/UserCenter/index.vue'),
           meta: {
             requiresAuth: true,
           },

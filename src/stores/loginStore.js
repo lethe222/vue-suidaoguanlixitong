@@ -4,7 +4,9 @@ export const useLoginStore = defineStore('login', {
   state: () => {
     return {
       token: '',
+      // 权限
       permission: '',
+      //用户名
       username: '',
     }
   },

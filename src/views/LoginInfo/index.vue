@@ -35,6 +35,7 @@
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
 import { reactive } from 'vue'
+import { ElMessage } from 'element-plus'
 import api from '@/api/index.js'
 import { useLoginStore } from '@/stores/loginStore.js'
 import { useRouter } from 'vue-router'
@@ -68,11 +69,12 @@ const handleLogin = () => {
         // 跳转到主页等操作
         router.push('/')
       } else {
-        ElMessage.error(res.data.msg)
+        ElMessage.error(res.data.msg || '登录失败')
       }
     })
     .catch((error) => {
       console.error('请求失败:', error)
+      ElMessage.error(error?.data?.msg || '请求失败，请检查网络')
     })
 }
 </script>
