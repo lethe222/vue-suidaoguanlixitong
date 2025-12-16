@@ -52,16 +52,16 @@ const user = reactive({
 
 // 处理登录逻辑
 const handleLogin = () => {
-  console.log(user)
+  /*   console.log(user)//打印登录的账号和密码 */
   api
     .getLogin({
       username: user.username,
       password: user.password,
     })
     .then((res) => {
-      console.log(res)
+      /*       console.log(res)//打印返回的数据，例如token等 */
       if (res.data.status === 200) {
-        console.log('登录成功', res.data)
+        console.log('登录成功')
         // 可以在这里保存 token 和用户信息
         localStore.token = res.data.token
         localStore.username = res.data.username

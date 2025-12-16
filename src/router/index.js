@@ -6,6 +6,7 @@ import Home from '../views/Homeview/index.vue'
 import Layout from '../views/Layout.vue'
 import LoginInfo from '../views/LoginInfo/index.vue'
 import { useLoginStore } from '../stores/loginStore.js'
+import { useMenuStore } from '@/stores/menuStore'
 
 /**
  * 创建路由器实例
@@ -37,16 +38,19 @@ const router = createRouter({
 如果已登录，才允许访问这个页面  */
           meta: {
             requiresAuth: true,
+            key: '首页',
           },
         },
         {
           // 施工监控检测
           path: '/build-manage',
           name: 'buildManage',
+
           // 使用动态导入实现路由级代码分割，提高应用性能
           component: () => import('../views/BuildManage/index.vue'),
           meta: {
             requiresAuth: true,
+            key: '施工监控检测',
           },
         },
         {
@@ -56,6 +60,7 @@ const router = createRouter({
           component: () => import('../views/GeologicalInfo/index.vue'),
           meta: {
             requiresAuth: true,
+            key: '超前地质预报',
           },
         },
         {
@@ -65,6 +70,7 @@ const router = createRouter({
           component: () => import('../views/ProjectInfo/index.vue'),
           meta: {
             requiresAuth: true,
+            key: '项目基础信息',
           },
         },
         {
@@ -74,6 +80,7 @@ const router = createRouter({
           component: () => import('../views/SystemManage/index.vue'),
           meta: {
             requiresAuth: true,
+            key: '系统信息管理',
           },
         },
         {
@@ -83,6 +90,7 @@ const router = createRouter({
           component: () => import('../views/TunnelInfo/index.vue'),
           meta: {
             requiresAuth: true,
+            key: '隧道设计信息',
           },
         },
         {
@@ -92,6 +100,7 @@ const router = createRouter({
           component: () => import('../views/WorkManage/index.vue'),
           meta: {
             requiresAuth: true,
+            key: '工作监督管理',
           },
         },
         {
@@ -101,6 +110,7 @@ const router = createRouter({
           component: () => import('../views/UserCenter/index.vue'),
           meta: {
             requiresAuth: true,
+            key: '个人中心',
           },
         },
       ],
@@ -124,6 +134,18 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     next()
+  }
+})
+//后置钩子函数
+router.afterEach((to, from) => {
+  /*   //路径永久存储
+  localStorage.setItem('active', to.path) */
+  if (to.meta.key) {
+    //存储key值
+    const menuStore = useMenuStore()
+    menuStore.breadcrumb = to.meta.key
+  } else {
+    console.log('路由：' + to.name + ' 未设置key值')
   }
 })
 export default router

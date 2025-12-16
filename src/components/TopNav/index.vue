@@ -11,7 +11,7 @@
     <div class="toggle-menu-breadcrumb">
       <el-breadcrumb>
         <el-breadcrumb-item>当前</el-breadcrumb-item>
-        <el-breadcrumb-item>首页</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ menuStore.breadcrumb }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="user">

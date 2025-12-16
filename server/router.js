@@ -2,9 +2,11 @@ const express = require('express')
 const router = express.Router()
 const url = require('url')
 const SQLConnect = require('./SqlConnect.js')
-const jwt=require("jsonwebtoken")
+const jwt = require('jsonwebtoken')
+const adminData = require('./data/admin.js')
+const vipData = require('./data/vip.js')
 //导入密钥
-const jwtSecret=require("./jwtSecret.js")
+const jwtSecret = require('./jwtSecret.js')
 //添加接口
 /* router.get('/list', (req, res) => {
   res.send({
@@ -20,17 +22,20 @@ router.post('/login', (req, res) => {
   SQLConnect(sql, [username, password], (result) => {
     if (result.length > 0) {
       /* 生成token */
-      const token=jwt.sign({
-        id:result[0].id,
-        username:result[0].username,
-        permission:result[0].permission
-      },jwtSecret.secret)
-       
+      const token = jwt.sign(
+        {
+          id: result[0].id,
+          username: result[0].username,
+          permission: result[0].permission,
+        },
+        jwtSecret.secret,
+      )
+
       res.send({
         status: 200,
-      username:result[0].username,
-        permission:result[0].permission,
-        token
+        username: result[0].username,
+        permission: result[0].permission,
+        token,
       })
     } else {
       //没有查询到数据
@@ -40,5 +45,29 @@ router.post('/login', (req, res) => {
       })
     }
   })
+})
+/* 用户权限管理 */
+router.get('/router', (req, res) => {
+  const user = url.parse(req.url, true).query.user
+  switch (user) {
+    case 'admin':
+      res.send({
+        status: 200,
+        menuData: adminData,
+      })
+      break
+    case 'vip':
+      res.send({
+        status: 200,
+        menuData: vipData,
+      })
+      break
+    default:
+      res.send({
+        status: 200,
+        menuData: vipData,
+      })
+      break
+  }
 })
 module.exports = router
