@@ -23,6 +23,13 @@ const router = createRouter({
       component: LoginInfo,
     },
     {
+      // 404路径匹配规则
+      //没有找到对应的路径地址
+      path: '/:pathMatch(.*)*',
+      name: 'notfound',
+      component: () => import('../views/NotFound/index.vue'),
+    },
+    {
       // 根路由配置
       path: '/',
       name: 'Layout',
@@ -93,16 +100,7 @@ const router = createRouter({
             key: '隧道设计信息',
           },
         },
-        {
-          // 工作监督管理
-          path: '/work-manage',
-          name: 'workManage',
-          component: () => import('../views/WorkManage/index.vue'),
-          meta: {
-            requiresAuth: true,
-            key: '工作监督管理',
-          },
-        },
+
         {
           // 个人中心
           path: '/userCenter',
@@ -111,6 +109,26 @@ const router = createRouter({
           meta: {
             requiresAuth: true,
             key: '个人中心',
+          },
+        },
+        {
+          // 检测计划
+          path: '/plan',
+          name: 'plan',
+          component: () => import('../views/BuildManage/PlanTest.vue'),
+          meta: {
+            requiresAuth: true,
+            key: '检测计划',
+          },
+        },
+        {
+          // 切面检测
+          path: '/section',
+          name: 'section',
+          component: () => import('../views/BuildManage/SectionTest.vue'),
+          meta: {
+            requiresAuth: true,
+            key: '切面检测',
           },
         },
       ],

@@ -16,8 +16,13 @@ import { useMenuStore } from '@/stores/menuStore'
 import { onMounted } from 'vue'
 import { useLoginStore } from '@/stores/loginStore'
 import api from '@/api/index.js'
+import { useRouter } from 'vue-router'
+import manageRoute from '@/router/dynamicRoute'
+
 const menuStore = useMenuStore()
 const loginStore = useLoginStore()
+const router = useRouter()
+
 /* 用户权限获取 */
 onMounted(() => {
   api
@@ -25,9 +30,15 @@ onMounted(() => {
       user: loginStore.permission,
     })
     .then((res) => {
-      /*       console.log(res.data.menuData.menus) // 打印返回的menuData数据 */
       if (res.data.status === 200) {
-        menuStore.menus = res.data.menuData.menus // 修正：使用 menuData 而不是 data
+        /* 将服务器返回的菜单数据存储到 menuStore */
+        menuStore.menus = res.data.menuData.menus
+
+        /* 判断当前用户权限 */
+        if (loginStore.permission === 'admin') {
+          /* 添加嵌套路由 - 只有管理员才能访问工作监督管理模块 */
+          router.addRoute('Layout', manageRoute)
+        }
       }
     })
     .catch((err) => {

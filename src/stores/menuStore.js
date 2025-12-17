@@ -8,13 +8,13 @@ export const useMenuStore = defineStore('menuStore', {
       menus: [],
     }
   },
-  //配置持久化
+  //state数据配置持久化
   persist: {
     enabled: true,
     strategies: [
       {
-        key: 'menus', //自定义的key值 存储到本地的key
-        storage: localStorage, //选择存储方式:本地持久化
+        key: 'menus_v1', // 添加版本号，改数据结构时可以改版本
+        storage: localStorage,
       },
     ],
   },
