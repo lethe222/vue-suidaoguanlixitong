@@ -30,3 +30,9 @@
 ### JSON Web Token 入门教程
 
 https://ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html
+
+### 参考的网站
+
+1. https://xvmb20251217143847970.worktile.com/preference-setting/language
+2. https://sa60sybrr0.feishu.cn/next/messenger/
+3. https://ai.feishu.cn/drive/ai-notes/

@@ -1,5 +1,6 @@
 <template>
   <div class="layout-container">
+    <DrawerSettings />
     <SliderNav />
     <div class="right-container" :style="{ marginLeft: menuStore.isCollapse ? '64px' : '210px' }">
       <TopNav />
@@ -18,6 +19,7 @@ import { useLoginStore } from '@/stores/loginStore'
 import api from '@/api/index.js'
 import { useRouter } from 'vue-router'
 import manageRoute from '@/router/dynamicRoute'
+import DrawerSettings from '@/components/DrawerSettings.vue'
 
 const menuStore = useMenuStore()
 const loginStore = useLoginStore()
