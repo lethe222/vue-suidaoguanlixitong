@@ -9,15 +9,15 @@
       <div class="drawer">
         <div class="drawer-item">
           <span>logo显示/隐藏</span>
-          <el-switch v-model="logoToggle" />
+          <el-switch v-model="systemStore.toggleStore" />
         </div>
         <div class="drawer-item">
           <span>logo显示/隐藏</span>
-          <el-switch v-model="logoToggle" />
+          <el-switch v-model="systemStore.toggleStore" />
         </div>
         <div class="drawer-item">
           <span>logo显示/隐藏</span>
-          <el-switch v-model="logoToggle" />
+          <el-switch v-model="systemStore.toggleStore" />
         </div>
       </div>
     </el-drawer>
@@ -25,13 +25,10 @@
 </template>
 <script setup>
 import { ref, watch } from 'vue'
+import { useSystemStore } from '@/stores/systemStore'
+const systemStore = useSystemStore()
 const drawer = ref(false)
-const logoToggle = ref(false)
 const emit = defineEmits(['onToggleEvent'])
-watch(logoToggle, (newvalue, oldvalue) => {
-  /* 子传父 */
-  emit('onToggleEvent', newvalue)
-})
 </script>
 <style scoped>
 .setting {

@@ -6,6 +6,7 @@ import App from './App.vue'
 import router from './router'
 import piniaPersist from 'pinia-plugin-persist'
 import elementIcon from './plugins/icons'
+import eCharts from './plugins/eCharts'
 
 // 引入 Element Plus
 import ElementPlus from 'element-plus'
@@ -19,5 +20,6 @@ app.use(pinia)
 app.use(router)
 app.use(ElementPlus)
 app.use(elementIcon)
+app.use(eCharts)
 
 app.mount('#app')

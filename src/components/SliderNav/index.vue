@@ -1,6 +1,8 @@
 <template>
   <div class="slider-nav" :style="{ width: menuStore.isCollapse ? '64px' : '210px' }">
-    <div v-show="myToggle" class="logo">{{ menuStore.isCollapse ? '隧道' : '隧道工程项目' }}</div>
+    <div v-show="systemStore.toggleStore" class="logo">
+      {{ menuStore.isCollapse ? '隧道' : '隧道工程项目' }}
+    </div>
     <el-menu
       background-color="#304156"
       text-color="#fff"
@@ -40,17 +42,12 @@
 import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMenuStore } from '@/stores/menuStore'
+import { useSystemStore } from '@/stores/systemStore'
+const systemStore = useSystemStore()
 const route = useRoute()
 const menuStore = useMenuStore()
 // 菜单高亮 = 当前路由路径，自动跟随路由变化
 const active = computed(() => route.path)
-/* 接收父传子 */
-const props = defineProps({
-  myToggle: {
-    type: Boolean,
-    default: false,
-  },
-})
 </script>
 <style scoped>
 .slider-nav {
