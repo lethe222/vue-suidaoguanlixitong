@@ -17,8 +17,30 @@
       <span class="box-title">地址预报：5000个</span>
     </div>
   </div>
+  <div class="line" id="line"></div>
 </template>
-<script></script>
+<script setup>
+import { getCurrentInstance, onMounted } from 'vue'
+import api from '@/api/index'
+const { proxy } = getCurrentInstance()
+onMounted(() => {
+  // 请求折线图数据
+  api
+    .getLine()
+    .then((res) => {
+      console.log(res.data.result.lines)
+      // 请求成功后渲染图表
+      if (res.data.status === 200) {
+        // 调用全局 $line 方法渲染 ECharts 图表，
+        // 将服务器数据传递给eCharts.js
+        proxy.$line('line', res.data.result.lines)
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+})
+</script>
 <style scoped>
 .card {
   display: flex;
@@ -48,5 +70,10 @@
 }
 .box-title {
   font-size: 20px;
+}
+.line {
+  width: 100%;
+  height: 300px;
+  background-color: #fff;
 }
 </style>

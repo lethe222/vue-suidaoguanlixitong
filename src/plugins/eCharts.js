@@ -4,21 +4,25 @@ export default {
   /* echarts挂载到vue全局 */
   install: (app) => {
     // 注入一个全局可用的 $line() 方法
-    app.config.globalProperties.$line = (element) => {
+    app.config.globalProperties.$line = (element, data) => {
       /* 加载echarts图表 */
-      var myChat = echarts.init(document.getElementById(element))
+      var myChart = echarts.init(document.getElementById(element))
       /* 图表配置 */
       const option = {
-        title: {
-          text: 'Stacked Line',
-        },
         tooltip: {
           trigger: 'axis',
         },
         legend: {
-          data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
+          // 将图例放到顶部居中
+          top: 10,
+          left: 'center',
+          orient: 'horizontal', // 水平排列
+          itemGap: 20, // 图例项之间的间距
+          data: ['隧道增加数量', '地质预测数量'],
         },
         grid: {
+          // 为顶部图例留出空间，避免被压住
+          top: '12%',
           left: '3%',
           right: '4%',
           bottom: '3%',
@@ -37,40 +41,9 @@ export default {
         yAxis: {
           type: 'value',
         },
-        series: [
-          {
-            name: 'Email',
-            type: 'line',
-            stack: 'Total',
-            data: [120, 132, 101, 134, 90, 230, 210],
-          },
-          {
-            name: 'Union Ads',
-            type: 'line',
-            stack: 'Total',
-            data: [220, 182, 191, 234, 290, 330, 310],
-          },
-          {
-            name: 'Video Ads',
-            type: 'line',
-            stack: 'Total',
-            data: [150, 232, 201, 154, 190, 330, 410],
-          },
-          {
-            name: 'Direct',
-            type: 'line',
-            stack: 'Total',
-            data: [320, 332, 301, 334, 390, 330, 320],
-          },
-          {
-            name: 'Search Engine',
-            type: 'line',
-            stack: 'Total',
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-          },
-        ],
+        series: data,
       }
-      myChat.setOption(option)
+      myChart.setOption(option)
     }
   },
 }

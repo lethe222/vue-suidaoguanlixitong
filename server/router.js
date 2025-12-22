@@ -5,8 +5,10 @@ const SQLConnect = require('./SqlConnect.js')
 const jwt = require('jsonwebtoken')
 const adminData = require('./data/admin.js')
 const vipData = require('./data/vip.js')
+const lineData = require('./data/line.js')
 //导入密钥
 const jwtSecret = require('./jwtSecret.js')
+
 //添加接口
 /* router.get('/list', (req, res) => {
   res.send({
@@ -69,5 +71,12 @@ router.get('/router', (req, res) => {
       })
       break
   }
+})
+/* 折线图的数据 */
+router.get('/line', (req, res) => {
+  res.send({
+    status: 200,
+    result: lineData,
+  })
 })
 module.exports = router
