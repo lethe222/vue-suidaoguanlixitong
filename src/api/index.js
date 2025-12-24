@@ -11,11 +11,9 @@ const api = {
       params,
     })
   },
-  /* 获取line数据 */
-  getLine(params) {
-    return axios.get(base.baseUrl + base.line, {
-      params,
-    })
+  /* 获取所有图表数据（折线图、雷达图、饼状图） */
+  getEchart() {
+    return axios.get(base.baseUrl + base.echart)
   },
 }
 

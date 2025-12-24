@@ -18,22 +18,33 @@
     </div>
   </div>
   <div class="line" id="line"></div>
+  <div class="charts">
+    <div class="radar" id="radar"></div>
+    <div class="piechart" id="piechart"></div>
+    <div class="barchart" id="barchart"></div>
+  </div>
 </template>
 <script setup>
 import { getCurrentInstance, onMounted } from 'vue'
 import api from '@/api/index'
 const { proxy } = getCurrentInstance()
 onMounted(() => {
-  // 请求折线图数据
+  // 请求所有图表数据
   api
-    .getLine()
+    .getEchart()
     .then((res) => {
-      console.log(res.data.result.lines)
-      // 请求成功后渲染图表
+      console.log(res.data.result)
+      // 请求成功后分别渲染各图表
       if (res.data.status === 200) {
-        // 调用全局 $line 方法渲染 ECharts 图表，
-        // 将服务器数据传递给eCharts.js
-        proxy.$line('line', res.data.result.lines)
+        const { lines, radars, piecharts, barcharts } = res.data.result
+        // 渲染折线图
+        proxy.$line('line', lines)
+        // 渲染雷达图
+        proxy.$radar('radar', radars)
+        // 渲染饼状图
+        proxy.$piechart('piechart', piecharts)
+        // 渲染柱状图
+        proxy.$barchart('barchart', barcharts)
       }
     })
     .catch((error) => {
@@ -49,7 +60,7 @@ onMounted(() => {
   /* 均分剩余空间 */
   flex: 1;
   height: 130px;
-  margin: 20px;
+  margin: 10px;
   padding: 20px;
   background: #fff;
   display: flex;
@@ -72,8 +83,29 @@ onMounted(() => {
   font-size: 20px;
 }
 .line {
+  border-radius: 1rem;
+  margin: 10px 0;
   width: 100%;
-  height: 300px;
+  height: 350px;
   background-color: #fff;
+}
+.charts {
+  display: flex;
+}
+.charts div {
+  border-radius: 1rem;
+  margin: 10px 0;
+  flex: 1;
+  height: 450px;
+  margin: 10px;
+  padding: 10px;
+  background-color: #fff;
+}
+/* 清除左右box的外边距*/
+.charts div:nth-child(1) {
+  margin-left: 0;
+}
+.charts div:nth-child(3) {
+  margin-right: 0;
 }
 </style>

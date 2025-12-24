@@ -58,6 +58,7 @@ const active = computed(() => route.path)
   width: 210px;
   background-color: #304156;
   transition: width 0.3s ease-in;
+  z-index: 10;
 }
 .logo {
   width: 100%;

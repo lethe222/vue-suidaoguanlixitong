@@ -4,7 +4,7 @@
     <SliderNav :myToggle="myToggle" />
     <div class="right-container" :style="{ marginLeft: menuStore.isCollapse ? '64px' : '210px' }">
       <TopNav />
-      <div class="content">
+      <div class="child-content">
         <RouterView></RouterView>
       </div>
     </div>
@@ -59,9 +59,9 @@ onMounted(() => {
 .right-container {
   margin-left: 210px;
   transition: 0.3s ease-in;
+  z-index: 1;
 }
-.content {
-  padding-left: 10px;
-  padding-top: 10px;
+.child-content {
+  padding: 5px 20px 0;
 }
 </style>

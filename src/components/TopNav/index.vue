@@ -68,6 +68,7 @@ const openMenu = (flag) => {
   background-color: #fff;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 12%);
   position: relative;
+  z-index: 9;
 }
 .toggle-menu {
   padding-top: 17.5px;

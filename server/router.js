@@ -5,7 +5,7 @@ const SQLConnect = require('./SqlConnect.js')
 const jwt = require('jsonwebtoken')
 const adminData = require('./data/admin.js')
 const vipData = require('./data/vip.js')
-const lineData = require('./data/line.js')
+const echartData = require('./data/echart.js')
 //导入密钥
 const jwtSecret = require('./jwtSecret.js')
 
@@ -72,11 +72,11 @@ router.get('/router', (req, res) => {
       break
   }
 })
-/* 折线图的数据 */
-router.get('/line', (req, res) => {
+/* 获取所有图表数据（折线图、雷达图、饼状图） */
+router.get('/echart', (req, res) => {
   res.send({
     status: 200,
-    result: lineData,
+    result: echartData,
   })
 })
 module.exports = router
