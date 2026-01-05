@@ -36,7 +36,7 @@ const getToggleEvent = (data) => {
 onMounted(() => {
   api
     .getRouter({
-      user: loginStore.permission,
+      permission: loginStore.permission,
     })
     .then((res) => {
       if (res.data.status === 200) {

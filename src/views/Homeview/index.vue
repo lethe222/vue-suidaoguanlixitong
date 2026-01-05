@@ -33,7 +33,7 @@ onMounted(() => {
   api
     .getEchart()
     .then((res) => {
-      console.log(res.data.result)
+      /*       console.log(res.data.result) */
       // 请求成功后分别渲染各图表
       if (res.data.status === 200) {
         const { lines, radars, piecharts, barcharts } = res.data.result

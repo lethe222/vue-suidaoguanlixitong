@@ -35,8 +35,9 @@ https://ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html
 
 1. https://xvmb20251217143847970.worktile.com/preference-setting/language
 2. https://sa60sybrr0.feishu.cn/next/messenger/
-3. https://ai.feishu.cn/drive/ai-notes/
+3. https://ai.feishu.cn/drive/ai-notes/ 4.https://ones.cn/project/#/workspace/team/4YDes243/filter/view/ft-t-001
 
 ### 设计规范
 
-圆角：border-radius: 1rem;
+大圆角：2rem;
+小圆角：0.5rem;

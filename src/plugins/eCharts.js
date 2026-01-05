@@ -1,5 +1,7 @@
 /* ECharts图标库 */
 import * as echarts from 'echarts'
+//引入地图
+import beijing from '@/assets/json/province/beijing.json'
 export default {
   /* echarts挂载到vue全局 */
   install: (app) => {
@@ -180,6 +182,71 @@ export default {
             data: data,
             type: 'bar',
             name: '隧道完成进度',
+          },
+        ],
+      }
+      myChart.setOption(option)
+      // 监听窗口大小变化，自动调整图表
+      window.addEventListener('resize', () => {
+        myChart.resize()
+      })
+    }
+    // 注入一个全局可用的 $beijing() 方法
+    app.config.globalProperties.$beijing = (element, data) => {
+      var myChart = echarts.init(document.getElementById(element))
+      //注册地图
+      echarts.registerMap('beijing', beijing)
+
+      const option = {
+        //鼠标点击弹窗
+        tooltip: {
+          triggerOn: 'click', //点击触发
+          enterable: true, //是否出现弹框
+          formatter: '{b}: {c}个隧道',
+        },
+        visualMap: {
+          orient: 'vertical',
+          type: 'piecewise',
+          left: 'left',
+          top: 'bottom',
+          pieces: [
+            { min: 60, color: '#1a53ff' }, // 深蓝 - 隧道最多
+            { min: 40, max: 60, color: '#3d7eff' }, // 蓝色
+            { min: 30, max: 40, color: '#5fa3ff' }, // 浅蓝
+            { min: 20, max: 30, color: '#91c7ff' }, // 淡蓝
+            { min: 10, max: 20, color: '#c2e0ff' }, // 很淡蓝
+            { max: 10, color: '#e3f2ff' }, // 最淡蓝
+          ],
+          textStyle: {
+            color: '#333',
+          },
+        },
+        series: [
+          {
+            name: '北京地图',
+            type: 'map',
+            map: 'beijing',
+            roam: true, //鼠标滚轮是否可以缩放
+            zoom: 1.2, //默认地图倍数
+            label: {
+              show: true, //是否显示地图上的文本信息
+              fontSize: 10,
+              color: '#333',
+            },
+            itemStyle: {
+              areaColor: '#f0f5ff',
+              borderColor: '#4a90e2',
+              borderWidth: 1,
+            },
+            emphasis: {
+              label: {
+                color: '#fff',
+              },
+              itemStyle: {
+                areaColor: '#ffc107',
+              },
+            },
+            data: data,
           },
         ],
       }

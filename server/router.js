@@ -50,8 +50,8 @@ router.post('/login', (req, res) => {
 })
 /* 用户权限管理 */
 router.get('/router', (req, res) => {
-  const user = url.parse(req.url, true).query.user
-  switch (user) {
+  const permission = url.parse(req.url, true).query.permission // 改为permission更清晰
+  switch (permission) {
     case 'admin':
       res.send({
         status: 200,
@@ -77,6 +77,69 @@ router.get('/echart', (req, res) => {
   res.send({
     status: 200,
     result: echartData,
+  })
+})
+/* 隧道信息查询 */
+router.get('/project/all', (req, res) => {
+  /* 分页 */
+  var page = url.parse(req.url, true).query.page || 1
+  /*   ORDER BY id DESC：DESC就是从大到小排。
+  LIMIT 15 ：页显示多少个？限制只取 15 条 
+  OFFSET 的意思是“偏移量”或“跳过
+  (page - 1) * 15可以理解为(1 - 1) * 15 = 0
+  */
+  const sql = 'select * FROM project order by id desc limit 15 offset ' + (page - 1) * 15
+  SQLConnect(sql, null, (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '暂无信息',
+      })
+    }
+  })
+})
+/* 隧道模糊查询 */
+router.get('/project/search', (req, res) => {
+  //接受参数：查询内容
+  const search = url.parse(req.url, true).query.search
+  /* 模糊查询sql语句编写 */
+  const sql = "select * from project where concat(name,address,remark) like '%" + search + "%'"
+  SQLConnect(sql, null, (result) => {
+    /* 判断是否有数据 */
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '暂无数据',
+      })
+    }
+  })
+})
+/* 获得总页数 */
+router.get('/project/total', (req, res) => {
+  const sql = 'select count(*) from project where id'
+  SQLConnect(sql, null, (result) => {
+    /* 判断是否有数据 */
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '暂无数据',
+      })
+    }
   })
 })
 module.exports = router
