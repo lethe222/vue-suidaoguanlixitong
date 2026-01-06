@@ -84,11 +84,11 @@ router.get('/project/all', (req, res) => {
   /* 分页 */
   var page = url.parse(req.url, true).query.page || 1
   /*   ORDER BY id DESC：DESC就是从大到小排。
-  LIMIT 15 ：页显示多少个？限制只取 15 条 
+  LIMIT 15 ：页显示多少个？限制只取 16条 
   OFFSET 的意思是“偏移量”或“跳过
-  (page - 1) * 15可以理解为(1 - 1) * 15 = 0
+  (page - 1) * 16 可以理解为(1 - 1) * 16 = 0
   */
-  const sql = 'select * FROM project order by id desc limit 15 offset ' + (page - 1) * 15
+  const sql = 'select * FROM project order by id desc limit 16 offset ' + (page - 1) * 16
   SQLConnect(sql, null, (result) => {
     if (result.length > 0) {
       res.send({
@@ -126,13 +126,13 @@ router.get('/project/search', (req, res) => {
 })
 /* 获得总页数 */
 router.get('/project/total', (req, res) => {
-  const sql = 'select count(*) from project where id'
+  const sql = 'select count(*) as total from project'
   SQLConnect(sql, null, (result) => {
     /* 判断是否有数据 */
     if (result.length > 0) {
       res.send({
         status: 200,
-        result,
+        result: { total: Number(result[0].total) },
       })
     } else {
       res.send({

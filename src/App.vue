@@ -16,4 +16,15 @@ html,
 .el-menu {
   border-right: 0 !important;
 }
+/* 弹框标题 */
+.el-dialog__header {
+  border-bottom: 1px solid #dfe1e5;
+}
+.el-dialog__title {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+.el-dialog__close {
+  font-size: 25px !important;
+}
 </style>

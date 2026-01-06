@@ -20,7 +20,7 @@
         <el-button @click="searchHandler" class="button-search" size="large" type="primary" plain>
           <el-icon class="button-icon"><Search /></el-icon>查询
         </el-button>
-        <el-button class="button-add" size="large" type="primary" plain>
+        <el-button class="button-add" size="large" type="primary" plain @click="addHandler">
           <el-icon class="button-icon"><Plus /></el-icon>添加
         </el-button>
       </div>
@@ -76,16 +76,118 @@
     <!-- 表格数据 end -->
     <!-- 分页start -->
     <div class="page">
-      <el-pagination @current-change="currentChange" layout="prev, pager, next" :total="1000" />
+      <span class="page-text"> 共{{ total }}条</span>
+      <el-pagination
+        @current-change="currentChange"
+        layout="prev, pager, next,jumper"
+        :default-page-size="defaultPageSize"
+        :total="total"
+      />
     </div>
-
     <!-- 分页end -->
+    <!-- 对话框start -->
+    <el-dialog v-model="dialogAddVisible" title="添加隧道信息" width="40%">
+      <div class="dialog-body">
+        <el-form :inline="true" :model="addformInfo">
+          <el-form-item label="项目名称">
+            <el-input v-model="addformInfo.name" placeholder="请输入项目名称"></el-input>
+          </el-form-item>
+          <el-form-item label="项目编码">
+            <el-input v-model="addformInfo.number" placeholder="请输入项目编码"></el-input>
+          </el-form-item>
+          <el-form-item label="项目金额">
+            <el-input
+              v-model="addformInfo.money"
+              placeholder="请输入项目金额"
+              type="number"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="项目地址">
+            <el-input v-model="addformInfo.address" placeholder="请输入项目地址"></el-input>
+          </el-form-item>
+          <el-form-item label="项目工期">
+            <el-input
+              v-model="addformInfo.duration"
+              placeholder="请输入工期(月)"
+              type="number"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="开工时间">
+            <!--  value-format="x"将时间转为时间戳 -->
+            <el-date-picker
+              v-model="addformInfo.startTime"
+              type="date"
+              placeholder="请输入开工时间"
+              value-format="x"
+            />
+          </el-form-item>
+          <el-form-item label="结束时间">
+            <el-date-picker
+              v-model="addformInfo.endTime"
+              type="date"
+              placeholder="请输入结束时间"
+              value-format="x"
+            />
+          </el-form-item>
+          <el-form-item label="隧道数量">
+            <el-input
+              v-model="addformInfo.quantity"
+              placeholder="请输入隧道数量"
+              type="number"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="项目状态">
+            <el-select v-model="addformInfo.status" placeholder="请输入项目状态">
+              <el-option label="已完成" value="1" />
+              <el-option label="施工中" value="0" />
+            </el-select>
+          </el-form-item>
+          <div class="dialog-remark">
+            <el-form-item label="备注">
+              <el-input
+                v-model="addformInfo.remark"
+                type="textarea"
+                placeholder="请输入备注"
+              ></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+      </div>
+
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogAddVisible = false">取消</el-button>
+          <el-button type="primary" @click="sureHandler"> 确定</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 对话框end -->
   </div>
 </template>
+
 <script setup>
 import api from '@/api/index'
 import { onMounted, reactive, ref } from 'vue'
 import { dateFormater } from '@/utils/utils'
+/* 添加表单数据 */
+const addformInfo = reactive({
+  name: '',
+  number: '',
+  money: '',
+  address: '',
+  duration: '',
+  startTime: '',
+  endTime: '',
+  quantity: '',
+  status: '',
+  remark: '',
+})
+/* 添加对话框控制器 */
+const dialogAddVisible = ref(false)
+/* 初始化分页计数 */
+const total = ref(0)
+/* 初始化分页显示数量*/
+const defaultPageSize = 16
 const projectInfo = reactive({
   list: [],
 })
@@ -103,17 +205,31 @@ const http = (page) => {
       console.log(error)
     })
 }
+/* 初始化获取页面数据 */
+onMounted(() => {
+  api.getTotal().then((res) => {
+    /*  打印总条数   console.log(res.data.result.total) */
+    if (res.data.status === 200) {
+      total.value = res.data.result.total
+    } else {
+      total.value = 0
+    }
+  })
+})
+/* 初始获取总条数 */
 onMounted(() => {
   http(1)
 })
-
 /*搜索初始化状态  */
 const searchInfo = ref('')
 /* 搜索按钮 */
 const searchHandler = () => {
-  console.log(searchInfo.value)
+  // 1. 去除首尾空格，并判断是否为空
+  if (!searchInfo.value || searchInfo.value.trim() === '') {
+    return
+  }
   api.getSearch({ search: searchInfo.value }).then((res) => {
-    console.log(res.data)
+    /*     console.log(res.data) */
     if (res.data.status === 200) {
       projectInfo.list = res.data.result
     } else {
@@ -123,7 +239,7 @@ const searchHandler = () => {
 }
 /* 分页事件 */
 const currentChange = (val) => {
-  console.log(val)
+  /* 打印当前点击的页码  console.log(val) */
   http(val)
 }
 
@@ -143,6 +259,14 @@ const handleEdit = (index, row) => {
 }
 const handleDelete = (index, row) => {
   console.log(index, row)
+}
+/* 添加对话框弹出事件 */
+const addHandler = () => {
+  dialogAddVisible.value = true
+}
+/* 对话框确定事件 */
+const sureHandler = () => {
+  console.log(addformInfo)
 }
 </script>
 
@@ -189,10 +313,19 @@ const handleDelete = (index, row) => {
   justify-content: flex-end;
   align-items: center;
 }
+.page-text {
+  padding: 0 20px;
+}
 /* 移除分页背景色 */
 :deep(.el-pagination .btn-prev),
 :deep(.el-pagination .btn-next),
 :deep(.el-pagination .el-pager li) {
   background-color: #ffffff00;
+}
+.dialog-body {
+  /*   display: flex;
+  justify-items: center;
+  align-items: center; */
+  padding: 20px 0 0;
 }
 </style>
