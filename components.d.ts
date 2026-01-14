@@ -50,6 +50,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SliderNav: typeof import('./src/components/SliderNav/index.vue')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
+    TingmceEditor: typeof import('./src/components/tingmceEditor.vue')['default']
     TopNav: typeof import('./src/components/TopNav/index.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }

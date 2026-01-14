@@ -142,4 +142,33 @@ router.get('/project/total', (req, res) => {
     }
   })
 })
+/* 隧道添加 */
+router.get('/project/add', (req, res) => {
+  const name = url.parse(req.url, true).query.name || ''
+  const number = url.parse(req.url, true).query.number || ''
+  const money = url.parse(req.url, true).query.money || ''
+  const address = url.parse(req.url, true).query.address || ''
+  const duration = url.parse(req.url, true).query.duration || ''
+  const startTime = url.parse(req.url, true).query.startTime || ''
+  const endTime = url.parse(req.url, true).query.endTime || ''
+  const quantity = url.parse(req.url, true).query.quantity || ''
+  const status = url.parse(req.url, true).query.status || ''
+  const remark = url.parse(req.url, true).query.remark || ''
+  const sql = 'insert into project values (null,?,?,?,?,?,?,?,?,?,?)'
+  const arr = [name, number, money, address, duration, startTime, endTime, quantity, status, remark]
+  SQLConnect(sql, arr, (result) => {
+    /* 判断是否有影响行术 */
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '添加成功',
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '添加失败',
+      })
+    }
+  })
+})
 module.exports = router

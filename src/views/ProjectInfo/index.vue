@@ -138,17 +138,15 @@
           </el-form-item>
           <el-form-item label="项目状态">
             <el-select v-model="addformInfo.status" placeholder="请输入项目状态">
-              <el-option label="已完成" value="1" />
-              <el-option label="施工中" value="0" />
+              <el-option label="已完成" value="0" />
+              <el-option label="施工中" value="1" />
             </el-select>
           </el-form-item>
+
           <div class="dialog-remark">
-            <el-form-item label="备注">
-              <el-input
-                v-model="addformInfo.remark"
-                type="textarea"
-                placeholder="请输入备注"
-              ></el-input>
+            <el-form-item class="remark-item" label="备注">
+              <!-- @onDataEvent="getDataHandler" 接收回调数据 -->
+              <tingmceEditor :options="options" @onDataEvent="getInfoEditorHandler" />
             </el-form-item>
           </div>
         </el-form>
@@ -169,6 +167,8 @@
 import api from '@/api/index'
 import { onMounted, reactive, ref } from 'vue'
 import { dateFormater } from '@/utils/utils'
+/* tingmce引入 */
+import tingmceEditor from '@/components/tingmceEditor.vue'
 /* 添加表单数据 */
 const addformInfo = reactive({
   name: '',
@@ -266,7 +266,44 @@ const addHandler = () => {
 }
 /* 对话框确定事件 */
 const sureHandler = () => {
-  console.log(addformInfo)
+  api
+    .getaddProject({
+      name: addformInfo.name,
+      number: addformInfo.number,
+      money: addformInfo.money,
+      address: addformInfo.address,
+      duration: addformInfo.duration,
+      startTime: addformInfo.startTime,
+      endTime: addformInfo.endTime,
+      quantity: addformInfo.quantity,
+      status: addformInfo.status,
+      remark: addformInfo.remark,
+    })
+    .then((res) => {
+      if (res.data.status === 200) {
+        console.log(res.data)
+        //去掉对话框
+        dialogAddVisible.value = false
+        //刷新页面
+        http(1)
+        console.log(addformInfo)
+      } else {
+        ElMessage.error(res.data.msg)
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+/*  tingmce富文本编辑器*/
+//定义富文本编辑器的宽高
+const options = {
+  width: '100%',
+  height: '200px',
+}
+//
+const getInfoEditorHandler = (data) => {
+  console.log(data)
 }
 </script>
 
@@ -322,10 +359,13 @@ const sureHandler = () => {
 :deep(.el-pagination .el-pager li) {
   background-color: #ffffff00;
 }
-.dialog-body {
-  /*   display: flex;
-  justify-items: center;
-  align-items: center; */
-  padding: 20px 0 0;
+/* 处理备注独占一行 */
+:deep(.remark-item) {
+  display: block;
+  width: 100%;
+}
+
+:deep(.remark-item .el-form-item__content) {
+  width: 100% !important;
 }
 </style>

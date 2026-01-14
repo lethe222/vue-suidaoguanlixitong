@@ -27,4 +27,16 @@ html,
 .el-dialog__close {
   font-size: 25px !important;
 }
+/*  输入框宽度*/
+.el-form-item__content {
+  width: 220px !important;
+}
+.el-form-item {
+  margin: 0 16px 16px 0;
+}
+.el-form {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 16px 0;
+}
 </style>

@@ -31,6 +31,10 @@ const api = {
   getTotal() {
     return axios.get(base.baseUrl + base.total)
   },
+  /* 添加隧道 */
+  getaddProject(params) {
+    return axios.get(base.baseUrl + base.addProject, { params })
+  },
 }
 
 export default api

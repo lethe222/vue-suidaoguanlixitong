@@ -8,5 +8,6 @@ const base = {
   projectInfo: '/api/project/all', //隧道信息获取（数据库）
   search: '/api/project/search', //搜索地址
   total: '/api/project/total', //总页地址
+  addProject: '/api/project/add', //添加隧道
 }
 export default base
