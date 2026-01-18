@@ -171,4 +171,41 @@ router.get('/project/add', (req, res) => {
     }
   })
 })
+/* 隧道信息删除 */
+router.get('/project/del', (req, res) => {
+  var id = url.parse(req.url, true).query.id
+  const sql = 'DELETE FROM `project` WHERE id=? '
+  SQLConnect(sql, id, (result) => {
+    /* 判断是否有数据 */
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '删除成功',
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '删除失败',
+      })
+    }
+  })
+})
+/* 隧道 预更新 */
+router.get('/project/update/pre', (req, res) => {
+  const id = url.parse(req.url, true).query.id
+  const sql = 'select * from project where id=?'
+  SQLConnect(sql, [id], (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result: result[0],
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '预更新失败',
+      })
+    }
+  })
+})
 module.exports = router

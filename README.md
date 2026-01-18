@@ -41,3 +41,8 @@ https://ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html
 
 大圆角：2rem;
 小圆角：0.5rem;
+
+### 编辑功能，数据回显
+
+1. 拿到当前表格中的数据，重新赋值到编辑对话框中
+2. 通过网络请求获取新的对应此条数据（预更新）

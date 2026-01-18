@@ -9,5 +9,7 @@ const base = {
   search: '/api/project/search', //搜索地址
   total: '/api/project/total', //总页地址
   addProject: '/api/project/add', //添加隧道
+  delProject: '/api/project/del', //删除隧道
+  preProject: '/api/project/update/pre', //预更新数据
 }
 export default base

@@ -65,8 +65,8 @@ const textContent = ref(props.value)
 const init = reactive({
   width: props.options.width,
   height: props.options.height,
-  language_url: '/tinymce/langs/zh-Hans.js',
-  language: 'zh-Hans',
+  language_url: '/tinymce/langs/zh_CN.js',
+  language: 'zh_CN',
   skin_url: '/tinymce/skins/ui/oxide',
   plugins: props.plugins,
   toolbar: props.toolbar,

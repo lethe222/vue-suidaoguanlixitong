@@ -35,6 +35,14 @@ const api = {
   getaddProject(params) {
     return axios.get(base.baseUrl + base.addProject, { params })
   },
+  /* 删除隧道 */
+  getdelProject(params) {
+    return axios.get(base.baseUrl + base.delProject, { params })
+  },
+  /*隧道预更新 */
+  getPreproject(params) {
+    return axios.get(base.baseUrl + base.preProject, { params })
+  },
 }
 
 export default api

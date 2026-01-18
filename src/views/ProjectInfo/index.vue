@@ -85,7 +85,7 @@
       />
     </div>
     <!-- 分页end -->
-    <!-- 对话框start -->
+    <!--添加按钮- 对话框start -->
     <el-dialog v-model="dialogAddVisible" title="添加隧道信息" width="40%">
       <div class="dialog-body">
         <el-form :inline="true" :model="addformInfo">
@@ -159,7 +159,60 @@
         </div>
       </template>
     </el-dialog>
-    <!-- 对话框end -->
+    <!--添加按钮-  对话框end -->
+    <!--编辑按钮- 对话框start -->
+    <el-dialog v-model="dialogEditVisible" title="编辑隧道信息" width="40%">
+      <div class="dialog-body">
+        <el-form :inline="true" :model="editformInfo">
+          <el-form-item label="项目名称">
+            <el-input v-model="editformInfo.name"></el-input>
+          </el-form-item>
+          <el-form-item label="项目编码">
+            <el-input v-model="editformInfo.number"></el-input>
+          </el-form-item>
+          <el-form-item label="项目金额">
+            <el-input v-model="editformInfo.money" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="项目地址">
+            <el-input v-model="editformInfo.address"></el-input>
+          </el-form-item>
+          <el-form-item label="项目工期">
+            <el-input v-model="editformInfo.duration" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="开工时间">
+            <!--  value-format="x"将时间转为时间戳 -->
+            <el-date-picker v-model="editformInfo.startTime" type="date" value-format="x" />
+          </el-form-item>
+          <el-form-item label="结束时间">
+            <el-date-picker v-model="editformInfo.endTime" type="date" value-format="x" />
+          </el-form-item>
+          <el-form-item label="隧道数量">
+            <el-input v-model="editformInfo.quantity" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="项目状态">
+            <el-select v-model="editformInfo.status">
+              <el-option label="已完成" value="0" />
+              <el-option label="施工中" value="1" />
+            </el-select>
+          </el-form-item>
+
+          <div class="dialog-remark">
+            <el-form-item class="remark-item" label="备注">
+              <!-- @onDataEvent="getDataHandler" 接收回调数据 -->
+              <tingmceEditor :options="options" @onDataEvent="getInfoEditorHandler" />
+            </el-form-item>
+          </div>
+        </el-form>
+      </div>
+
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogEditVisible = false">取消</el-button>
+          <el-button type="primary" @click="sureEditHandler"> 确定</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!--编辑按钮- 对话框end-->
   </div>
 </template>
 
@@ -169,6 +222,8 @@ import { onMounted, reactive, ref } from 'vue'
 import { dateFormater } from '@/utils/utils'
 /* tingmce引入 */
 import tingmceEditor from '@/components/tingmceEditor.vue'
+/* 记录当前页码 */
+const currentPage = ref(1)
 /* 添加表单数据 */
 const addformInfo = reactive({
   name: '',
@@ -182,8 +237,23 @@ const addformInfo = reactive({
   status: '',
   remark: '',
 })
+/* 修改表单数据 */
+const editformInfo = reactive({
+  name: '',
+  number: '',
+  money: '',
+  address: '',
+  duration: '',
+  startTime: '',
+  endTime: '',
+  quantity: '',
+  status: '',
+  remark: '',
+})
 /* 添加对话框控制器 */
 const dialogAddVisible = ref(false)
+//编辑对话框控制器
+const dialogEditVisible = ref(false)
 /* 初始化分页计数 */
 const total = ref(0)
 /* 初始化分页显示数量*/
@@ -218,7 +288,7 @@ onMounted(() => {
 })
 /* 初始获取总条数 */
 onMounted(() => {
-  http(1)
+  http(currentPage.value)
 })
 /*搜索初始化状态  */
 const searchInfo = ref('')
@@ -240,6 +310,8 @@ const searchHandler = () => {
 /* 分页事件 */
 const currentChange = (val) => {
   /* 打印当前点击的页码  console.log(val) */
+  //保存当前页码
+  currentPage.value = val
   http(val)
 }
 
@@ -255,16 +327,73 @@ const headerClass = () => {
 }
 /* 编辑/删除 */
 const handleEdit = (index, row) => {
-  console.log(index, row)
+  // console.log(index, row)
+  dialogEditVisible.value = true
+  api
+    .getPreproject({ id: row.id })
+    .then((res) => {
+      if (res.data.status === 200) {
+        // console.log(res.data.result)
+        editformInfo.name = res.data.result.name
+        editformInfo.number = res.data.result.number
+        editformInfo.money = res.data.result.money
+        editformInfo.address = res.data.result.address
+        editformInfo.duration = res.data.result.duration
+        editformInfo.startTime = res.data.result.startTime
+        editformInfo.endTime = res.data.result.endTime
+        editformInfo.quantity = res.data.result.quantity
+        editformInfo.status = res.data.result.status
+        editformInfo.remark = res.data.result.remark
+      } else {
+        ElMessage.error(res.data.msg)
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 }
+//编辑按钮-对话框确定事件
+const sureEditHandler = () => {}
+
 const handleDelete = (index, row) => {
-  console.log(index, row)
+  /*   console.log(row.id) */
+  ElMessageBox.confirm('确认删除吗', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      api.getdelProject({ id: row.id }).then((res) => {
+        if (res.data.status === 200) {
+          console.log(res.data)
+          /* 调用成功tips */
+          ElMessage({
+            type: 'success',
+            message: res.data.msg,
+          })
+          /* 刷新ui */
+          http(currentPage.value)
+        } else {
+          /* 调用失败tips */
+          ElMessage({
+            type: 'error',
+            message: res.data.msg,
+          })
+        }
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      })
+    })
 }
-/* 添加对话框弹出事件 */
+/* 添加按钮-对话框弹出事件 */
 const addHandler = () => {
   dialogAddVisible.value = true
 }
-/* 对话框确定事件 */
+/* 添加按钮-对话框确定事件 */
 const sureHandler = () => {
   api
     .getaddProject({
@@ -295,6 +424,7 @@ const sureHandler = () => {
       console.log(error)
     })
 }
+
 /*  tingmce富文本编辑器*/
 //定义富文本编辑器的宽高
 const options = {
@@ -303,7 +433,8 @@ const options = {
 }
 //
 const getInfoEditorHandler = (data) => {
-  console.log(data)
+  /*   console.log(data) */
+  addformInfo.remark = data
 }
 </script>
 
