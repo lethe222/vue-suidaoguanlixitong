@@ -50,8 +50,8 @@ instance.interceptors.request.use(
   //成功函数
   (config) => {
     //config:请求信息
-    //所有的post请求都需要增加一个参数的格式化 querystring.stringify()
-    if (config.method === 'post') {
+    //所有的post/put请求都需要增加一个参数的格式化 querystring.stringify()
+    if (config.method === 'post' || config.method === 'put') {
       //将data格式化后赋值回去
       config.data = qs.stringify(config.data)
     }

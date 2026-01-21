@@ -43,6 +43,10 @@ const api = {
   getPreproject(params) {
     return axios.get(base.baseUrl + base.preProject, { params })
   },
+  /* 编辑/更新隧道 */
+  getupdataProjec(id, params) {
+    return axios.put(base.baseUrl + base.updataProject + id, params)
+  },
 }
 
 export default api

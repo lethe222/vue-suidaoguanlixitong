@@ -208,4 +208,44 @@ router.get('/project/update/pre', (req, res) => {
     }
   })
 })
+/* 修改隧道 
+restFull API
+get
+post
+put
+del
+...
+*/
+router.put('/project/update/:id', (req, res) => {
+  const id = req.params.id
+  /*   console.log(id)
+  console.log(req.body) */
+  const { name, number, money, address, duration, startTime, endTime, quantity, status, remark } =
+    req.body
+  const sql =
+    'update project set name=?,number=?,money=?,address=?,duration=?,startTime=?,endTime=?,quantity=?,status=?,remark=? where id=?'
+  const arr = [
+    name,
+    number,
+    money,
+    address,
+    duration,
+    startTime,
+    endTime,
+    quantity,
+    status,
+    remark,
+    id,
+  ]
+  SQLConnect(sql, arr, (result) => {
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '修改成功',
+      })
+    } else {
+      res.send({ status: 500, msg: '修改失败' })
+    }
+  })
+})
 module.exports = router

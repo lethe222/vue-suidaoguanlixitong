@@ -11,5 +11,6 @@ const base = {
   addProject: '/api/project/add', //添加隧道
   delProject: '/api/project/del', //删除隧道
   preProject: '/api/project/update/pre', //预更新数据
+  updataProject: '/api/project/update/', //编辑隧道（隧道更新）
 }
 export default base

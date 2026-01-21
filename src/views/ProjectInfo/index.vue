@@ -57,7 +57,12 @@
         </template>
       </el-table-column>
       <!--  show-overflow-tooltip一行展示，不换行-->
-      <el-table-column show-overflow-tooltip prop="remark" label="备注">
+      <el-table-column
+        :remark="editformInfo.remark"
+        show-overflow-tooltip
+        prop="remark"
+        label="备注"
+      >
         <template #default="{ row }">
           <div v-html="row.remark"></div>
         </template>
@@ -161,7 +166,8 @@
     </el-dialog>
     <!--添加按钮-  对话框end -->
     <!--编辑按钮- 对话框start -->
-    <el-dialog v-model="dialogEditVisible" title="编辑隧道信息" width="40%">
+    //destroy-on-close关闭对话框时完全销毁对话框
+    <el-dialog destroy-on-close v-model="dialogEditVisible" title="编辑隧道信息" width="40%">
       <div class="dialog-body">
         <el-form :inline="true" :model="editformInfo">
           <el-form-item label="项目名称">
@@ -199,7 +205,12 @@
           <div class="dialog-remark">
             <el-form-item class="remark-item" label="备注">
               <!-- @onDataEvent="getDataHandler" 接收回调数据 -->
-              <tingmceEditor :options="options" @onDataEvent="getInfoEditorHandler" />
+              <tingmceEditor
+                :editorID="editorID"
+                :options="options"
+                :remark="editformInfo.remark"
+                @onDataEvent="getInfoEditorHandler"
+              />
             </el-form-item>
           </div>
         </el-form>
@@ -222,6 +233,8 @@ import { onMounted, reactive, ref } from 'vue'
 import { dateFormater } from '@/utils/utils'
 /* tingmce引入 */
 import tingmceEditor from '@/components/tingmceEditor.vue'
+//定义修改数据的唯一ID
+const editorID = ref(0)
 /* 记录当前页码 */
 const currentPage = ref(1)
 /* 添加表单数据 */
@@ -328,7 +341,7 @@ const headerClass = () => {
 /* 编辑/删除 */
 const handleEdit = (index, row) => {
   // console.log(index, row)
-  dialogEditVisible.value = true
+  editorID.value = row.id
   api
     .getPreproject({ id: row.id })
     .then((res) => {
@@ -339,11 +352,50 @@ const handleEdit = (index, row) => {
         editformInfo.money = res.data.result.money
         editformInfo.address = res.data.result.address
         editformInfo.duration = res.data.result.duration
-        editformInfo.startTime = res.data.result.startTime
-        editformInfo.endTime = res.data.result.endTime
+        //修改日期格式
+        editformInfo.startTime = Number(res.data.result.startTime)
+        editformInfo.endTime = Number(res.data.result.endTime)
         editformInfo.quantity = res.data.result.quantity
         editformInfo.status = res.data.result.status
         editformInfo.remark = res.data.result.remark
+        // 在数据加载完成后再打开对话框，防止出现空值
+        dialogEditVisible.value = true
+      } else {
+        ElMessage.error(res.data.msg)
+      }
+    })
+
+    .catch((error) => {
+      console.log(error)
+    })
+}
+//修改提交富文本编辑器数据
+const getInfoEditorHandler = (data) => {
+  /*   console.log(data) */
+  //接受tinymce子级传递的值
+  editformInfo.remark = data
+}
+//编辑按钮-对话框确定事件
+const sureEditHandler = () => {
+  api
+    .getupdataProjec(editorID.value, {
+      name: editformInfo.name,
+      number: editformInfo.number,
+      money: editformInfo.money,
+      address: editformInfo.address,
+      duration: editformInfo.duration,
+      startTime: editformInfo.startTime,
+      endTime: editformInfo.endTime,
+      quantity: editformInfo.quantity,
+      status: editformInfo.status,
+      remark: editformInfo.remark,
+    })
+    .then((res) => {
+      if (res.data.status === 200) {
+        //去掉对话框
+        dialogEditVisible.value = false
+        //刷新页面
+        http(currentPage.value)
       } else {
         ElMessage.error(res.data.msg)
       }
@@ -352,9 +404,7 @@ const handleEdit = (index, row) => {
       console.log(error)
     })
 }
-//编辑按钮-对话框确定事件
-const sureEditHandler = () => {}
-
+//删除按钮
 const handleDelete = (index, row) => {
   /*   console.log(row.id) */
   ElMessageBox.confirm('确认删除吗', {
@@ -414,7 +464,7 @@ const sureHandler = () => {
         //去掉对话框
         dialogAddVisible.value = false
         //刷新页面
-        http(1)
+        http(currentPage.value)
         console.log(addformInfo)
       } else {
         ElMessage.error(res.data.msg)
@@ -430,11 +480,6 @@ const sureHandler = () => {
 const options = {
   width: '100%',
   height: '200px',
-}
-//
-const getInfoEditorHandler = (data) => {
-  /*   console.log(data) */
-  addformInfo.remark = data
 }
 </script>
 

@@ -23,13 +23,21 @@ import 'tinymce/plugins/save'
 import 'tinymce/plugins/searchreplace'
 import 'tinymce/plugins/pagebreak'
 import 'tinymce/plugins/insertdatetime'
-import { ref, reactive, watch } from 'vue'
-
+import { ref, reactive, watch, onMounted } from 'vue'
+import api from '@/api/index'
 // 先定义 props，再在 init 中使用
 const props = defineProps({
   value: {
     type: String,
     default: '',
+  },
+  remark: {
+    type: String,
+    default: '',
+  },
+  editorID: {
+    type: Number,
+    default: null,
   },
   options: {
     type: Object, // 期望接收的类型是对象
@@ -74,6 +82,7 @@ const init = reactive({
   branding: false,
   menubar: false, // 隐藏菜单栏
   statusbar: true, // 显示底部状态栏
+  /*   toolbar: false, //删除工具栏 */
   init_instance_callback: (editor) => {
     console.log('初始化完成：', editor)
   },
@@ -91,14 +100,36 @@ const init = reactive({
 // 同步外部 value 变更
 watch(
   () => props.value,
-  (val) => {
-    if (val !== textContent.value) textContent.value = val
+  (newValue, oldValue) => {
+    textContent.value = newValue
   },
 )
-
+/* watch(
+  function () {
+    props.value
+  },
+  function (newValue, oldValue) {
+    textContent.value = newValue
+  },
+) */
+onMounted(() => {
+  //数据处理显示
+  textContent.value = props.remark
+  console.log(props.editorID)
+  api
+    .getPreproject({ id: props.editorID })
+    .then((res) => {
+      if (res.data.status === 200) {
+        textContent.value = res.data.result.remark
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+})
 // 向父组件派发内容变化
-watch(textContent, (val) => {
-  emit('onDataEvent', val)
+watch(textContent, (newValue, oldValue) => {
+  emit('onDataEvent', newValue)
 })
 </script>
 
