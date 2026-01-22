@@ -10,9 +10,28 @@
     </div>
     <div class="toggle-menu-breadcrumb">
       <el-breadcrumb>
-        <el-breadcrumb-item>当前</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ $t('message.navs') }}</el-breadcrumb-item>
         <el-breadcrumb-item>{{ menuStore.breadcrumb }}</el-breadcrumb-item>
       </el-breadcrumb>
+    </div>
+    <div class="lang">
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          <img src="@/assets/images/languge.svg" alt="language" class="lang-icon" />
+          <el-icon class="el-icon--right">
+            <arrow-down />
+          </el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <router-link to="/">
+              <el-dropdown-item @click="changlanguge(`zh`)">中文</el-dropdown-item>
+              <el-dropdown-item @click="changlanguge(`en`)">英文</el-dropdown-item>
+              <el-dropdown-item @click="changlanguge(`ja`)">日文</el-dropdown-item>
+            </router-link>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
     <div class="user">
       <el-dropdown>
@@ -60,6 +79,13 @@ const closeMenu = (flag) => {
 const openMenu = (flag) => {
   menuStore.isCollapse = flag
 }
+//切换语言
+const changlanguge = (lang) => {
+  localStorage.setItem('lang', lang)
+  // console.log(lang)
+  //页面刷新
+  location.reload()
+}
 </script>
 <style scoped>
 .nav {
@@ -82,7 +108,7 @@ const openMenu = (flag) => {
 }
 .toggle-menu-breadcrumb {
   float: left;
-  width: 500px;
+  width: 200px;
   line-height: 60px;
   margin-top: 6px;
   margin-left: 20px;
@@ -93,5 +119,20 @@ const openMenu = (flag) => {
   /* 垂直居中 */
   top: 50%;
   transform: translateY(-50%);
+  padding: 10px;
+}
+.lang {
+  position: absolute;
+  right: 140px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px;
+}
+.lang :deep(el-icon) {
+  font-size: 60px;
+}
+.lang-icon {
+  width: 20px;
+  height: 20px;
 }
 </style>

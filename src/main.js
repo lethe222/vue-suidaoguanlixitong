@@ -12,6 +12,8 @@ import eCharts from './plugins/eCharts'
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import 'element-plus/dist/index.css'
+//引入i18n
+import i18n from './plugins/languge/i18n'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -22,5 +24,5 @@ app.use(router)
 app.use(ElementPlus, { locale: zhCn })
 app.use(elementIcon)
 app.use(eCharts)
-
+app.use(i18n)
 app.mount('#app')
