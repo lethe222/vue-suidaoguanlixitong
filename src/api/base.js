@@ -12,5 +12,8 @@ const base = {
   delProject: '/api/project/del', //删除隧道
   preProject: '/api/project/update/pre', //预更新数据
   updataProject: '/api/project/update/', //编辑隧道（隧道更新）
+  tunnelList: '/api/tunnel/list', //隧道设计信息-tree-一级
+  tunnelListChild: '/api/tunnel/list/child', //隧道设计信息-tree-二级
+  tunnelContent: '/api/tunnel/content', //隧道设计信息 内容
 }
 export default base

@@ -47,6 +47,18 @@ const api = {
   getupdataProjec(id, params) {
     return axios.put(base.baseUrl + base.updataProject + id, params)
   },
+  //隧道设计信息-tree-一级
+  gettunnelList() {
+    return axios.get(base.baseUrl + base.tunnelList)
+  },
+  //隧道设计信息-tree-二级
+  gettunnelListChild(params) {
+    return axios.get(base.baseUrl + base.tunnelListChild, { params })
+  },
+  //隧道设计信息 内容
+  gettunnelContent(params) {
+    return axios.get(base.baseUrl + base.tunnelContent, { params })
+  },
 }
 
 export default api

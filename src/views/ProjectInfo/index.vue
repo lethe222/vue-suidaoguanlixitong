@@ -166,7 +166,7 @@
     </el-dialog>
     <!--添加按钮-  对话框end -->
     <!--编辑按钮- 对话框start -->
-    //destroy-on-close关闭对话框时完全销毁对话框
+    <!--     destroy-on-close关闭对话框时完全销毁对话框 -->
     <el-dialog destroy-on-close v-model="dialogEditVisible" title="编辑隧道信息" width="40%">
       <div class="dialog-body">
         <el-form :inline="true" :model="editformInfo">

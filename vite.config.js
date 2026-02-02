@@ -26,6 +26,9 @@ export default defineConfig({
       dts: true, // 生成类型声明文件
     }),
   ],
+  optimizeDeps: {
+    exclude: ['fsevents'],
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -37,7 +40,7 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
-      }
-    }
-  }
+      },
+    },
+  },
 })

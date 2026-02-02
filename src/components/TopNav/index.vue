@@ -82,7 +82,7 @@ const openMenu = (flag) => {
 //切换语言
 const changlanguge = (lang) => {
   localStorage.setItem('lang', lang)
-  // console.log(lang)
+  console.log(lang)
   //页面刷新
   location.reload()
 }
