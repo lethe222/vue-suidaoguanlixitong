@@ -8,7 +8,9 @@ const vipData = require('./data/vip.js')
 const echartData = require('./data/echart.js')
 //导入密钥
 const jwtSecret = require('./jwtSecret.js')
-
+//文件上传/文件管理
+const multer = require('multer')
+const fs = require('fs')
 //添加接口
 /* router.get('/list', (req, res) => {
   res.send({
@@ -298,6 +300,59 @@ router.get('/tunnel/content', (req, res) => {
         status: 500,
         msg: '暂无数据',
       })
+    }
+  })
+})
+/* 文件上传 
+http://localhost:3000/api/upload/
+*/
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './upload/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname)
+  },
+})
+
+var createFolder = function (folder) {
+  try {
+    fs.accessSync(folder)
+  } catch (e) {
+    fs.mkdirSync(folder)
+  }
+}
+
+var uploadFolder = './upload/'
+createFolder(uploadFolder)
+var upload = multer({ storage: storage })
+
+router.post('/upload', upload.single('file'), function (req, res, next) {
+  var file = req.file
+  console.log('文件类型：%s', file.mimetype)
+  console.log('原始文件名：%s', file.originalname)
+  console.log('文件大小：%s', file.size)
+  console.log('文件保存路径：%s', file.path)
+  res.json({ res_code: '0', name: file.originalname, url: file.path })
+})
+/* 
+更新隧道设计信息-content-url
+*/
+router.post('/tunnel/content/url', (req, res, next) => {
+  // 从请求体(req.body)中获取id，因为是POST请求
+  const id = req.body.id
+  // 从请求体(req.body)中获取url，并命名为fileUrl以避免与顶部的url模块变量名冲突
+  const fileUrl = req.body.fileUrl
+  //数据库
+  const sql = 'update tunnelcontent set fileUrl=? where id=?'
+  SQLConnect(sql, [fileUrl, id], (result) => {
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '上传成功',
+      })
+    } else {
+      res.send({ status: 500, msg: '上传失败' })
     }
   })
 })
