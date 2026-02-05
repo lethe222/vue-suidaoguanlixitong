@@ -59,6 +59,9 @@
 <script setup>
 import api from '@/api/index.js'
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+//获取路由实例
+const router = useRouter()
 // 定义上传文件列表
 const fileList = ref([])
 //初始化对话框按钮
@@ -130,7 +133,12 @@ const loadNode = (node, resolve) => {
 }
 
 //预览
-const previewHandler = (index, row) => {}
+const previewHandler = (index, row) => {
+  //跳转到pdf预览界面
+  router.push({
+    path: '/PDFViewer' + row.id,
+  })
+}
 //上传
 const updateHandler = (index, row) => {
   //点击上传按钮弹出对话框

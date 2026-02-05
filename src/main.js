@@ -16,6 +16,8 @@ import ja from 'element-plus/dist/locale/ja.mjs'
 import 'element-plus/dist/index.css'
 //引入i18n
 import i18n from './plugins/languge/i18n'
+//引入pdf插件
+import VuePdf from 'vue3-pdfjs'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -23,6 +25,8 @@ const pinia = createPinia()
 pinia.use(piniaPersist)
 app.use(pinia)
 app.use(router)
+//使用pdf插件
+app.use(VuePdf)
 //配置语言包对象
 const langMap = {
   zh: zhCn,

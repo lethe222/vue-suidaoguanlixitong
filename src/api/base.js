@@ -16,5 +16,6 @@ const base = {
   tunnelListChild: '/api/tunnel/list/child', //隧道设计信息-tree-二级
   tunnelContent: '/api/tunnel/content', //隧道设计信息 内容
   uploadTunnelContent: '/api/tunnel/content/url', //隧道设计信息-content-上传
+  pdfPreView: '/api/tunnel/pdf', //pdf预览
 }
 export default base

@@ -63,6 +63,10 @@ const api = {
   getuploadTunnelContent(params) {
     return axios.post(base.baseUrl + base.uploadTunnelContent, params)
   },
+  //pdf预览
+  getpdfPreView(params) {
+    return axios.get(base.baseUrl + base.pdfPreView, { params })
+  },
 }
 
 export default api

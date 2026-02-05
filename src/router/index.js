@@ -29,6 +29,13 @@ const router = createRouter({
       name: 'notfound',
       component: () => import('../views/NotFound/index.vue'),
     },
+    //PDFViewer页面
+    {
+      //:id 表示一个 动态参数
+      path: '/PDFViewer:id',
+      name: 'PDFViewer',
+      component: () => import('../views/TunnelInfo/PDFViewer.vue'),
+    },
     {
       // 根路由配置
       path: '/',

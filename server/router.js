@@ -356,4 +356,19 @@ router.post('/tunnel/content/url', (req, res, next) => {
     }
   })
 })
+/* PDF预览 */
+router.get('/tunnel/pdf', (req, res) => {
+  const id = url.parse(req.url, true).query.id
+  const sql = 'select *from tunnelcontent where id=?'
+  SQLConnect(sql, [id], (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result: result[0],
+      })
+    } else {
+      res.send({ status: 500, msg: '暂无pdf数据' })
+    }
+  })
+})
 module.exports = router
