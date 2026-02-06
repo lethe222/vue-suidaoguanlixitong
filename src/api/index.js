@@ -67,6 +67,10 @@ const api = {
   getpdfPreView(params) {
     return axios.get(base.baseUrl + base.pdfPreView, { params })
   },
+  //获取用户列表
+  getuserList() {
+    return axios.get(base.baseUrl + base.userList)
+  },
 }
 
 export default api

@@ -371,4 +371,18 @@ router.get('/tunnel/pdf', (req, res) => {
     }
   })
 })
+/* 用户列表 */
+router.get('/user/list', (req, res) => {
+  const sql = 'select * from user'
+  SQLConnect(sql, null, (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      })
+    } else {
+      res.send({ status: 500, msg: '暂无用户数据' })
+    }
+  })
+})
 module.exports = router
