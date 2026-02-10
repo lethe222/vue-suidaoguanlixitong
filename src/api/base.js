@@ -18,5 +18,7 @@ const base = {
   uploadTunnelContent: '/api/tunnel/content/url', //隧道设计信息-content-上传
   pdfPreView: '/api/tunnel/pdf', //pdf预览
   userList: '/api/user/list', //用户列表
+  userTotal: '/api/user/total', //user的总页地址
+  searchUser: '/api/user/search', //用户搜索
 }
 export default base

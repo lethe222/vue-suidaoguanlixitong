@@ -126,7 +126,7 @@ router.get('/project/search', (req, res) => {
     }
   })
 })
-/* 获得总页数 */
+/* 获得project总页数 */
 router.get('/project/total', (req, res) => {
   const sql = 'select count(*) as total from project'
   SQLConnect(sql, null, (result) => {
@@ -373,7 +373,14 @@ router.get('/tunnel/pdf', (req, res) => {
 })
 /* 用户列表 */
 router.get('/user/list', (req, res) => {
-  const sql = 'select * from user'
+  /* 分页 */
+  var page = url.parse(req.url, true).query.page || 1
+  /*  ORDER BY id ASC：ASC就是从小到大排。
+  LIMIT 15 ：页显示多少个？限制只取 16条 
+  OFFSET 的意思是“偏移量”或“跳过
+  (page - 1) * 16 可以理解为(1 - 1) * 16 = 0
+  */
+  const sql = 'select * FROM user order by id asc limit 16 offset ' + (page - 1) * 16
   SQLConnect(sql, null, (result) => {
     if (result.length > 0) {
       res.send({
@@ -382,6 +389,46 @@ router.get('/user/list', (req, res) => {
       })
     } else {
       res.send({ status: 500, msg: '暂无用户数据' })
+    }
+  })
+})
+/* 获得user总页数 */
+router.get('/user/total', (req, res) => {
+  const sql = 'select count(*) as total from user'
+  SQLConnect(sql, null, (result) => {
+    /* 判断是否有数据 */
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result: { total: Number(result[0].total) },
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '暂无数据',
+      })
+    }
+  })
+})
+/* 用户模糊查询 */
+router.get('/user/search', (req, res) => {
+  //接受参数：查询内容
+  const search = url.parse(req.url, true).query.search
+  /* 模糊查询sql语句编写 
+  concat(username,phone,permission)里边是要查询的内容*/
+  const sql = "select * from user where concat(username,phone,permission) like '%" + search + "%'"
+  SQLConnect(sql, null, (result) => {
+    /* 判断是否有数据 */
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '暂无数据',
+      })
     }
   })
 })

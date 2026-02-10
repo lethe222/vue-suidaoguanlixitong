@@ -68,8 +68,16 @@ const api = {
     return axios.get(base.baseUrl + base.pdfPreView, { params })
   },
   //获取用户列表
-  getuserList() {
-    return axios.get(base.baseUrl + base.userList)
+  getuserList(params) {
+    return axios.get(base.baseUrl + base.userList, { params })
+  },
+  //user表的总条数
+  getuserTotal() {
+    return axios.get(base.baseUrl + base.userTotal)
+  },
+  //搜索用户
+  getsearchUser(params) {
+    return axios.get(base.baseUrl + base.searchUser, { params })
   },
 }
 

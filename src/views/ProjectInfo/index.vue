@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     <!-- 搜索和添加 start -->
-    <div class="search">
+    <div class="toolbar">
       <!-- @keyup.enter: 监听回车键释放事件，
        用户按下回车键时触发searchHandler搜索函数，
        增强用户体验 -->
@@ -275,7 +275,7 @@ const projectInfo = reactive({
   list: [],
 })
 /* 网络请求 */
-const http = (page) => {
+const getProjectList = (page = 1) => {
   api
     .projectInfo({ page })
     .then((res) => {
@@ -288,8 +288,12 @@ const http = (page) => {
       console.log(error)
     })
 }
-/* 初始化获取页面数据 */
+
+/* 初始化页面数据 */
 onMounted(() => {
+  // 获取列表数据
+  getProjectList(currentPage.value)
+  // 获取总条数
   api.getTotal().then((res) => {
     /*  打印总条数   console.log(res.data.result.total) */
     if (res.data.status === 200) {
@@ -299,16 +303,14 @@ onMounted(() => {
     }
   })
 })
-/* 初始获取总条数 */
-onMounted(() => {
-  http(currentPage.value)
-})
 /*搜索初始化状态  */
 const searchInfo = ref('')
 /* 搜索按钮 */
 const searchHandler = () => {
   // 1. 去除首尾空格，并判断是否为空
   if (!searchInfo.value || searchInfo.value.trim() === '') {
+    // 如果为空，重新加载所有数据
+    getProjectList(1)
     return
   }
   api.getSearch({ search: searchInfo.value }).then((res) => {
@@ -325,7 +327,7 @@ const currentChange = (val) => {
   /* 打印当前点击的页码  console.log(val) */
   //保存当前页码
   currentPage.value = val
-  http(val)
+  getProjectList(val)
 }
 
 /* 设置表格头部样式：headerClass */
@@ -395,7 +397,7 @@ const sureEditHandler = () => {
         //去掉对话框
         dialogEditVisible.value = false
         //刷新页面
-        http(currentPage.value)
+        getProjectList(currentPage.value)
       } else {
         ElMessage.error(res.data.msg)
       }
@@ -422,7 +424,7 @@ const handleDelete = (index, row) => {
             message: res.data.msg,
           })
           /* 刷新ui */
-          http(currentPage.value)
+          getProjectList(currentPage.value)
         } else {
           /* 调用失败tips */
           ElMessage({
@@ -464,7 +466,7 @@ const sureHandler = () => {
         //去掉对话框
         dialogAddVisible.value = false
         //刷新页面
-        http(currentPage.value)
+        getProjectList(currentPage.value)
         console.log(addformInfo)
       } else {
         ElMessage.error(res.data.msg)
@@ -497,26 +499,26 @@ const options = {
 :deep(.input .el-input__wrapper) {
   border-radius: 0.5rem;
 }
-.search {
+.toolbar {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px;
+  padding: 12px 12px;
   background: #f6f9ff;
   border: 1px solid #e0e7ff;
   border-radius: 1rem 1rem 0 0;
   border-bottom: 0px solid #e0e7ff;
 }
 .button-icon {
-  margin-right: 4px;
+  margin-right: 8px;
   font-size: large;
 }
 
-.search .input {
+.toolbar .input {
   width: 320px;
 }
 
-.search .button {
+.toolbar .button {
   display: flex;
   gap: 0px; /* 按钮之间的间距 */
 }

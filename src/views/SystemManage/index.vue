@@ -1,4 +1,25 @@
 <template>
+  <!-- 搜索和添加  start-->
+  <div class="toolbar">
+    <!-- @keyup.enter: 监听回车键释放事件，
+       用户按下回车键时触发searchHandler搜索函数，
+       增强用户体验 -->
+    <el-input class="input" v-model="searchInfo" size="large" placeholder="请输入要搜索的信息">
+      <template #prefix>
+        <el-icon class="button-icon"><Search /></el-icon>
+      </template>
+    </el-input>
+    <div class="button">
+      <el-button @click="searchHandler" class="button-search" size="large" type="primary" plain>
+        <el-icon class="button-icon"><Search /></el-icon>查询</el-button
+      >
+      <el-button @click="addHandler" class="button-add" size="large" type="primary" plain>
+        <el-icon class="button-icon"><Plus /></el-icon>添加</el-button
+      >
+    </div>
+  </div>
+  <!-- 搜索和添加 end -->
+  <!-- 表格 start -->
   <el-table :data="usersList.list" style="width: 100%" :header-cell-style="headerClass">
     <el-table-column prop="username" label="用户名称" />
     <el-table-column label="状态">
@@ -21,6 +42,7 @@
       </template>
     </el-table-column>
   </el-table>
+  <!-- 表格 end-->
   <!-- 分页start -->
   <div class="page">
     <span class="page-text"> 共{{ total }}条</span>
@@ -32,10 +54,20 @@
     />
   </div>
   <!-- 分页end -->
+  <!-- 添加的对话框 start-->
+  <!-- 添加的对话框 end -->
 </template>
 <script setup>
 import { onMounted, ref, reactive } from 'vue'
 import api from '@/api/index.js'
+//初始化总条数
+const total = ref(0)
+// 初始化分页显示数量
+const defaultPageSize = 16
+//保存当前页码
+const currentPage = ref(0)
+//搜索初始化
+const searchInfo = ref('')
 /* 设置表格头部样式：headerClass */
 const headerClass = () => {
   return {
@@ -48,19 +80,58 @@ const headerClass = () => {
 }
 //初始化table内容
 const usersList = reactive({ list: [] })
-onMounted(() => {
+// 获取用户列表
+const getUserList = (page = 1) => {
   api
-    .getuserList()
+    .getuserList({ page })
     .then((res) => {
-      console.log(res.data)
+      /*       console.log(res.data) */
       if (res.data.status === 200) {
+        // 将后端数据在前端展示
         usersList.list = res.data.result
       }
     })
     .catch((error) => {
       console.log(error)
     })
+}
+//初始化获取页面数据
+onMounted(() => {
+  getUserList()
+  api.getuserTotal().then((res) => {
+    //打印user的总条数
+    // console.log(res.data.result.total)
+    total.value = res.data.result.total
+  })
 })
+
+// 分页事件
+const currentChange = (val) => {
+  /* 打印当前点击的页码  console.log(val) */
+  //保存当前页码
+  currentPage.value = val
+  getUserList(val)
+}
+//搜索按钮
+const searchHandler = () => {
+  //1.去除首尾空哥，并判断是否为空
+  if (!searchInfo.value || searchInfo.value.trim() === '') {
+    //如果是空，重新加载所有数据
+    getUserList(1)
+    return
+  }
+  api.getsearchUser({ search: searchInfo.value }).then((res) => {
+    /*     console.log(res.data) */
+    if (res.data.status === 200) {
+      // 将搜索结果给到 usersList.list 展示
+      usersList.list = res.data.result
+    } else {
+      usersList.list = []
+    }
+  })
+}
+//添加按钮
+const addHandler = () => {}
 </script>
 <style scoped>
 /* 让整张表格拥有圆角并裁剪内部溢出 */
@@ -70,5 +141,28 @@ onMounted(() => {
 }
 :deep(.el-table__inner-wrapper::before) {
   display: none; /* 去掉底部的边框线 */
+}
+.page {
+  padding: 12px 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+/* toolbar样式 */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  background: #f6f9ff;
+  border: 1px solid #e0e7ff;
+  border-radius: 1rem 1rem 0 0;
+}
+.toolbar .button-icon {
+  margin-right: 8px;
+  font-size: large;
+}
+.toolbar .input {
+  width: 320px;
 }
 </style>
