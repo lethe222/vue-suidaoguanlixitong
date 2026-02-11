@@ -55,6 +55,36 @@
   </div>
   <!-- 分页end -->
   <!-- 添加的对话框 start-->
+  <el-dialog v-model="dialogAddVisible" title="Tips" width="35%">
+    <div class="dialog-body">
+      <el-form :inline="true" :model="addformInfo">
+        <el-form-item label="姓名">
+          <el-input v-model="addformInfo.username"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="addformInfo.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="权限">
+          <el-select v-model="addformInfo.permission" placeholder="please select your zone">
+            <el-option label="管理员" value="admin" />
+            <el-option label="普通用户" value="vip" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-radio-group v-model="addformInfo.status">
+            <el-radio value="Sponsor">Sponsor</el-radio>
+            <el-radio value="Venue">Venue</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+    </div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogAddVisible = false">取消</el-button>
+        <el-button type="primary" @click="sureHandler"> 确定</el-button>
+      </div>
+    </template>
+  </el-dialog>
   <!-- 添加的对话框 end -->
 </template>
 <script setup>
@@ -68,6 +98,15 @@ const defaultPageSize = 16
 const currentPage = ref(0)
 //搜索初始化
 const searchInfo = ref('')
+//"添加对话框"初始化
+const dialogAddVisible = ref(false)
+//"添加表单的数据"初始化
+const addformInfo = reactive({
+  username: '',
+  phone: '',
+  permission: '',
+  status: '',
+})
 /* 设置表格头部样式：headerClass */
 const headerClass = () => {
   return {
@@ -131,7 +170,11 @@ const searchHandler = () => {
   })
 }
 //添加按钮
-const addHandler = () => {}
+const addHandler = () => {
+  dialogAddVisible.value = true
+}
+//确定事件
+const sureHandler = () => {}
 </script>
 <style scoped>
 /* 让整张表格拥有圆角并裁剪内部溢出 */
