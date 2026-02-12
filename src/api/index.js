@@ -79,6 +79,10 @@ const api = {
   getsearchUser(params) {
     return axios.get(base.baseUrl + base.searchUser, { params })
   },
+  //用户添加
+  getaddUser(params) {
+    return axios.get(base.baseUrl + base.addUser, { params })
+  },
 }
 
 export default api

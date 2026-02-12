@@ -432,4 +432,28 @@ router.get('/user/search', (req, res) => {
     }
   })
 })
+/* 用户添加 */
+router.get('/user/add', (req, res) => {
+  const username = url.parse(req.url, true).query.username || ''
+  const password = url.parse(req.url, true).query.password || ''
+  const phone = url.parse(req.url, true).query.phone || ''
+  const permission = url.parse(req.url, true).query.permission || ''
+  const status = url.parse(req.url, true).query.status || ''
+  const sql = 'insert into user values (null,?,?,?,?,?)'
+  const arr = [username, password, phone, permission, status]
+  SQLConnect(sql, arr, (result) => {
+    /* 判断是否有影响行术 */
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '添加成功',
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '添加失败',
+      })
+    }
+  })
+})
 module.exports = router

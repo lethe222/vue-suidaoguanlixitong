@@ -94,30 +94,30 @@
     <el-dialog v-model="dialogAddVisible" title="添加隧道信息" width="40%">
       <div class="dialog-body">
         <el-form :inline="true" :model="addformInfo">
-          <el-form-item label="项目名称">
+          <el-form-item label="项目名称" prop="name">
             <el-input v-model="addformInfo.name" placeholder="请输入项目名称"></el-input>
           </el-form-item>
-          <el-form-item label="项目编码">
+          <el-form-item label="项目编码" prop="number">
             <el-input v-model="addformInfo.number" placeholder="请输入项目编码"></el-input>
           </el-form-item>
-          <el-form-item label="项目金额">
+          <el-form-item label="项目金额" prop="money">
             <el-input
               v-model="addformInfo.money"
               placeholder="请输入项目金额"
               type="number"
             ></el-input>
           </el-form-item>
-          <el-form-item label="项目地址">
+          <el-form-item label="项目地址" prop="address">
             <el-input v-model="addformInfo.address" placeholder="请输入项目地址"></el-input>
           </el-form-item>
-          <el-form-item label="项目工期">
+          <el-form-item label="项目工期" prop="duration">
             <el-input
               v-model="addformInfo.duration"
               placeholder="请输入工期(月)"
               type="number"
             ></el-input>
           </el-form-item>
-          <el-form-item label="开工时间">
+          <el-form-item label="开工时间" prop="startTime">
             <!--  value-format="x"将时间转为时间戳 -->
             <el-date-picker
               v-model="addformInfo.startTime"
@@ -126,7 +126,7 @@
               value-format="x"
             />
           </el-form-item>
-          <el-form-item label="结束时间">
+          <el-form-item label="结束时间" prop="endTime">
             <el-date-picker
               v-model="addformInfo.endTime"
               type="date"
@@ -134,14 +134,14 @@
               value-format="x"
             />
           </el-form-item>
-          <el-form-item label="隧道数量">
+          <el-form-item label="隧道数量" prop="quantity">
             <el-input
               v-model="addformInfo.quantity"
               placeholder="请输入隧道数量"
               type="number"
             ></el-input>
           </el-form-item>
-          <el-form-item label="项目状态">
+          <el-form-item label="项目状态" prop="status">
             <el-select v-model="addformInfo.status" placeholder="请输入项目状态">
               <el-option label="已完成" value="0" />
               <el-option label="施工中" value="1" />
@@ -149,7 +149,7 @@
           </el-form-item>
 
           <div class="dialog-remark">
-            <el-form-item class="remark-item" label="备注">
+            <el-form-item class="remark-item" label="备注" prop="remark">
               <!-- @onDataEvent="getDataHandler" 接收回调数据 -->
               <tingmceEditor :options="options" @onDataEvent="getInfoEditorHandler" />
             </el-form-item>
@@ -170,32 +170,32 @@
     <el-dialog destroy-on-close v-model="dialogEditVisible" title="编辑隧道信息" width="40%">
       <div class="dialog-body">
         <el-form :inline="true" :model="editformInfo">
-          <el-form-item label="项目名称">
+          <el-form-item label="项目名称" prop="name">
             <el-input v-model="editformInfo.name"></el-input>
           </el-form-item>
-          <el-form-item label="项目编码">
+          <el-form-item label="项目编码" prop="number">
             <el-input v-model="editformInfo.number"></el-input>
           </el-form-item>
-          <el-form-item label="项目金额">
+          <el-form-item label="项目金额" prop="money">
             <el-input v-model="editformInfo.money" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="项目地址">
+          <el-form-item label="项目地址" prop="address">
             <el-input v-model="editformInfo.address"></el-input>
           </el-form-item>
-          <el-form-item label="项目工期">
+          <el-form-item label="项目工期" prop="duration">
             <el-input v-model="editformInfo.duration" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="开工时间">
+          <el-form-item label="开工时间" prop="startTime">
             <!--  value-format="x"将时间转为时间戳 -->
             <el-date-picker v-model="editformInfo.startTime" type="date" value-format="x" />
           </el-form-item>
-          <el-form-item label="结束时间">
+          <el-form-item label="结束时间" prop="endTime">
             <el-date-picker v-model="editformInfo.endTime" type="date" value-format="x" />
           </el-form-item>
-          <el-form-item label="隧道数量">
+          <el-form-item label="隧道数量" prop="quantity">
             <el-input v-model="editformInfo.quantity" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="项目状态">
+          <el-form-item label="项目状态" prop="status">
             <el-select v-model="editformInfo.status">
               <el-option label="已完成" value="0" />
               <el-option label="施工中" value="1" />
@@ -203,7 +203,7 @@
           </el-form-item>
 
           <div class="dialog-remark">
-            <el-form-item class="remark-item" label="备注">
+            <el-form-item class="remark-item" label="备注" prop="remark">
               <!-- @onDataEvent="getDataHandler" 接收回调数据 -->
               <tingmceEditor
                 :editorID="editorID"

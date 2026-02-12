@@ -24,8 +24,8 @@
     <el-table-column prop="username" label="用户名称" />
     <el-table-column label="状态">
       <template #default="scope">
-        <el-tag :type="scope.row.status === '1' ? 'success' : 'danger'">{{
-          scope.row.status === '1' ? '正常' : '异常'
+        <el-tag :type="scope.row.status === 'normal' ? 'success' : 'danger'">{{
+          scope.row.status === 'normal' ? '正常' : '异常'
         }}</el-tag>
       </template>
     </el-table-column>
@@ -58,22 +58,25 @@
   <el-dialog v-model="dialogAddVisible" title="Tips" width="35%">
     <div class="dialog-body">
       <el-form :inline="true" :model="addformInfo">
-        <el-form-item label="姓名">
+        <el-form-item label="姓名" prop="username">
           <el-input v-model="addformInfo.username"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addformInfo.password" type="password" show-password></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
           <el-input v-model="addformInfo.phone"></el-input>
         </el-form-item>
-        <el-form-item label="权限">
-          <el-select v-model="addformInfo.permission" placeholder="please select your zone">
+        <el-form-item label="权限" prop="permission">
+          <el-select v-model="addformInfo.permission" placeholder="请选择一个选项">
             <el-option label="管理员" value="admin" />
             <el-option label="普通用户" value="vip" />
           </el-select>
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-radio-group v-model="addformInfo.status">
-            <el-radio value="Sponsor">Sponsor</el-radio>
-            <el-radio value="Venue">Venue</el-radio>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="addformInfo.status" size="large" fill="#409eff">
+            <el-radio-button value="normal">正常</el-radio-button>
+            <el-radio-button value="abnormal">异常</el-radio-button>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -103,6 +106,7 @@ const dialogAddVisible = ref(false)
 //"添加表单的数据"初始化
 const addformInfo = reactive({
   username: '',
+  password: '',
   phone: '',
   permission: '',
   status: '',
@@ -174,7 +178,20 @@ const addHandler = () => {
   dialogAddVisible.value = true
 }
 //确定事件
-const sureHandler = () => {}
+const sureHandler = () => {
+  api
+    .getaddUser({
+      usernam,
+    })
+    .then((res) => {
+      console.log(res.data)
+      if (res.data.status === 200) {
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
 </script>
 <style scoped>
 /* 让整张表格拥有圆角并裁剪内部溢出 */
