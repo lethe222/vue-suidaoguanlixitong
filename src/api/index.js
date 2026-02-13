@@ -83,6 +83,10 @@ const api = {
   getaddUser(params) {
     return axios.get(base.baseUrl + base.addUser, { params })
   },
+  //用户删除
+  getdelUser(params) {
+    return axios.get(base.baseUrl + base.delUser, { params })
+  },
 }
 
 export default api

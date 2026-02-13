@@ -396,9 +396,12 @@ const sureEditHandler = () => {
       if (res.data.status === 200) {
         //去掉对话框
         dialogEditVisible.value = false
+        //给出添加成功的提示
+        ElMessage.success(res.data.msg)
         //刷新页面
         getProjectList(currentPage.value)
       } else {
+        //给出添加失败的提示
         ElMessage.error(res.data.msg)
       }
     })
@@ -465,6 +468,8 @@ const sureHandler = () => {
         console.log(res.data)
         //去掉对话框
         dialogAddVisible.value = false
+        //给出添加成功的提示
+        ElMessage.success(res.data.msg)
         //刷新页面
         getProjectList(currentPage.value)
         console.log(addformInfo)

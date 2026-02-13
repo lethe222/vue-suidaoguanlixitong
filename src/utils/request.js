@@ -70,10 +70,16 @@ instance.interceptors.response.use(
     /*  const response = error.response  */
     const { response } = error
     if (response) {
+      //1.有响应，但是状态码不是2xx（比如404，500）
       errorHandler(response.status, response.statusText)
       return Promise.reject(response)
     } else {
-      console.log('断网了')
+      //2.没有响应（断网/超时）
+      ElMessage({
+        type: 'error',
+        message: '网络连接失败，请检查网络或后端服务是否启动',
+        grouping: true,
+      })
       return Promise.reject(error)
     }
   },

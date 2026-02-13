@@ -156,19 +156,44 @@ router.get('/project/add', (req, res) => {
   const quantity = url.parse(req.url, true).query.quantity || ''
   const status = url.parse(req.url, true).query.status || ''
   const remark = url.parse(req.url, true).query.remark || ''
-  const sql = 'insert into project values (null,?,?,?,?,?,?,?,?,?,?)'
-  const arr = [name, number, money, address, duration, startTime, endTime, quantity, status, remark]
-  SQLConnect(sql, arr, (result) => {
-    /* 判断是否有影响行术 */
-    if (result.affectedRows > 0) {
-      res.send({
-        status: 200,
-        msg: '添加成功',
-      })
-    } else {
+
+  // 1. 先查询项目名称是否存在
+  const checkSql = 'select * from project where name = ?'
+  SQLConnect(checkSql, [name], (checkResult) => {
+    if (checkResult.length > 0) {
+      // 项目名称已存在
       res.send({
         status: 500,
-        msg: '添加失败',
+        msg: '项目名称已存在',
+      })
+    } else {
+      // 2. 不存在，再执行插入
+      const sql = 'insert into project values (null,?,?,?,?,?,?,?,?,?,?)'
+      const arr = [
+        name,
+        number,
+        money,
+        address,
+        duration,
+        startTime,
+        endTime,
+        quantity,
+        status,
+        remark,
+      ]
+      SQLConnect(sql, arr, (result) => {
+        /* 判断是否有影响行术 */
+        if (result.affectedRows > 0) {
+          res.send({
+            status: 200,
+            msg: '添加成功',
+          })
+        } else {
+          res.send({
+            status: 500,
+            msg: '添加失败',
+          })
+        }
       })
     }
   })
@@ -439,19 +464,53 @@ router.get('/user/add', (req, res) => {
   const phone = url.parse(req.url, true).query.phone || ''
   const permission = url.parse(req.url, true).query.permission || ''
   const status = url.parse(req.url, true).query.status || ''
-  const sql = 'insert into user values (null,?,?,?,?,?)'
-  const arr = [username, password, phone, permission, status]
-  SQLConnect(sql, arr, (result) => {
-    /* 判断是否有影响行术 */
+
+  // 1. 先查询用户名是否存在
+  const checkSql = 'select * from user where username = ?'
+  SQLConnect(checkSql, [username], (checkResult) => {
+    if (checkResult.length > 0) {
+      // 用户名已存在
+      res.send({
+        status: 500,
+        msg: '用户名已存在',
+      })
+    } else {
+      // 2. 不存在，再执行插入
+      const sql = 'insert into user values (null,?,?,?,?,?)'
+      const arr = [username, password, phone, permission, status]
+      SQLConnect(sql, arr, (result) => {
+        /* 判断是否有影响行术 */
+        if (result.affectedRows > 0) {
+          res.send({
+            status: 200,
+            msg: '添加成功',
+          })
+        } else {
+          res.send({
+            status: 500,
+            msg: '添加失败',
+          })
+        }
+      })
+    }
+  })
+})
+/* 用户删除 */
+router.get('/user/del', (req, res) => {
+  var id = url.parse(req.url, true).query.id
+  //根据返回的id进行删除
+  const sql = 'DELETE FROM `user` WHERE id=? '
+  SQLConnect(sql, id, (result) => {
+    /* 判断是否有数据 */
     if (result.affectedRows > 0) {
       res.send({
         status: 200,
-        msg: '添加成功',
+        msg: '删除成功',
       })
     } else {
       res.send({
         status: 500,
-        msg: '添加失败',
+        msg: '删除失败',
       })
     }
   })

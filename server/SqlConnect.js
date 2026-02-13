@@ -12,14 +12,16 @@ function SQLConnect(sql, arr, callback) {
   //链接数据库
   pool.getConnection((err, connection) => {
     if (err) {
-      console.log(err)
+      console.log('数据库连接失败:', err)
+      callback([]) // 必须调用回调，否则前端会一直等待直到超时
       return
     }
     connection.query(sql, arr, (err, result) => {
       //每次用完释放链接
       connection.release()
       if (err) {
-        console.log(err)
+        console.log('SQL执行失败:', err)
+        callback([]) // 必须调用回调，否则前端会一直等待直到超时
         return
       }
       callback(result)

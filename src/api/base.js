@@ -21,5 +21,6 @@ const base = {
   userTotal: '/api/user/total', //user的总页地址
   searchUser: '/api/user/search', //用户搜索
   addUser: '/api/user/add', //用户添加
+  delUser: '/api/user/del', //用户删除
 }
 export default base

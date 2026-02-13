@@ -181,13 +181,36 @@ const addHandler = () => {
 const sureHandler = () => {
   api
     .getaddUser({
-      usernam,
+      username: addformInfo.username,
+      password: addformInfo.password,
+      phone: addformInfo.phone,
+      permission: addformInfo.permission,
+      status: addformInfo.status,
     })
     .then((res) => {
-      console.log(res.data)
       if (res.data.status === 200) {
+        //关闭对话框
+        dialogAddVisible.value = false
+        //成功提示
+        ElMessage.success(res.data.msg)
+        //刷新页面
+        getUserList(1)
+      } else {
+        //弹出错误弹窗并打印错误问题
+        ElMessage.error(res.data.msg)
       }
     })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+//删除按钮
+const handleDelete = (index, row) => {
+  console.log(row)
+
+  api
+    .getdelUser(row)
+    .then(() => {})
     .catch((error) => {
       console.log(error)
     })
