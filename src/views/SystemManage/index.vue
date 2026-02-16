@@ -30,7 +30,11 @@
       </template>
     </el-table-column>
     <el-table-column prop="phone" label="手机号码" />
-    <el-table-column prop="permission" label="权限" />
+    <el-table-column label="权限">
+      <template #default="scope">
+        <el-text>{{ scope.row.permission === 'vip' ? '普通用户' : '管理员' }}</el-text>
+      </template>
+    </el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
         <el-button size="small" type="primary" text @click="handleEdit(scope.$index, scope.row)"
@@ -206,13 +210,35 @@ const sureHandler = () => {
 }
 //删除按钮
 const handleDelete = (index, row) => {
-  console.log(row)
+  // console.log(row)
+  ElMessageBox.confirm('确认删除吗', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      //确定删除
+      api
+        .getdelUser({ id: row.id })
+        // 发送删除用户请求，并在响应中根据结果进行处理
+        .then((res) => {
+          //删除成功
+          if (res.data.status === 200) {
+            /*             console.log(res) */
+            ElMessage.success(res.data.msg)
+            //刷新页面
+            getUserList(currentPage.value)
+          }
+          //删除失败
+          else {
+            ElMessage.error(res.data.msg)
+          }
+        })
+    })
 
-  api
-    .getdelUser(row)
-    .then(() => {})
     .catch((error) => {
-      console.log(error)
+      //取消删除
+      ElMessage.warning('取消删除')
     })
 }
 </script>

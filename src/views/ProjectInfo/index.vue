@@ -412,6 +412,7 @@ const sureEditHandler = () => {
 //删除按钮
 const handleDelete = (index, row) => {
   /*   console.log(row.id) */
+  //给出提示框确认是否删除
   ElMessageBox.confirm('确认删除吗', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
