@@ -1,5 +1,4 @@
-/* 
-存放所有网络请求地址 */
+/* 存放所有网络请求地址 */
 const base = {
   baseUrl: 'http://localhost:3000', //公共地址
   login: '/api/login', //登录接口
@@ -21,6 +20,8 @@ const base = {
   userTotal: '/api/user/total', //user的总页地址
   searchUser: '/api/user/search', //用户搜索
   addUser: '/api/user/add', //用户添加
+  updateUser: '/api/user/update', //用户更新
   delUser: '/api/user/del', //用户删除
+  previewUser: '/api/user/preview', //用户预更新
 }
 export default base

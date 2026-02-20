@@ -83,9 +83,17 @@ const api = {
   getaddUser(params) {
     return axios.get(base.baseUrl + base.addUser, { params })
   },
+  //用户更新
+  getupdateUser(params) {
+    return axios.put(base.baseUrl + base.updateUser, params)
+  },
   //用户删除
   getdelUser(params) {
     return axios.get(base.baseUrl + base.delUser, { params })
+  },
+  //用户预更新
+  getpreviewUser(params) {
+    return axios.get(base.baseUrl + base.previewUser, { params })
   },
 }
 

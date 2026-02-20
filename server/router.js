@@ -515,4 +515,39 @@ router.get('/user/del', (req, res) => {
     }
   })
 })
+/* 用户预更新 */
+router.get('/user/preview', (req, res) => {
+  var id = url.parse(req.url, true).query.id
+  //根据返回的id进行更新
+  const sql = 'select * FROM `user` WHERE id=? '
+  SQLConnect(sql, [id], (result) => {
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        result,
+      })
+    } else {
+      res.send({
+        status: 500,
+        msg: '暂无数据',
+      })
+    }
+  })
+})
+/* 用户修改 */
+router.put('/user/update', (req, res) => {
+  const { id, password, phone, permission, status } = req.body
+  const sql = 'update user set password=?,phone=?,permission=?,status=? where id=?'
+  const arr = [password, phone, permission, status, id]
+  SQLConnect(sql, arr, (result) => {
+    if (result.affectedRows > 0) {
+      res.send({
+        status: 200,
+        msg: '修改成功',
+      })
+    } else {
+      res.send({ status: 500, msg: '修改失败' })
+    }
+  })
+})
 module.exports = router

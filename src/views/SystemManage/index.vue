@@ -37,10 +37,21 @@
     </el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button size="small" type="primary" text @click="handleEdit(scope.$index, scope.row)"
+        <el-button
+          :disabled="!isAdmin"
+          size="small"
+          type="primary"
+          text
+          @click="handleEdit(scope.$index, scope.row)"
           >编辑</el-button
         >
-        <el-button size="small" type="danger" text @click="handleDelete(scope.$index, scope.row)">
+        <el-button
+          :disabled="!isAdmin"
+          size="small"
+          type="danger"
+          text
+          @click="handleDelete(scope.$index, scope.row)"
+        >
           删除
         </el-button>
       </template>
@@ -59,7 +70,7 @@
   </div>
   <!-- 分页end -->
   <!-- 添加的对话框 start-->
-  <el-dialog v-model="dialogAddVisible" title="Tips" width="35%">
+  <el-dialog v-model="dialogAddVisible" title="添加用户信息" width="35%">
     <div class="dialog-body">
       <el-form :inline="true" :model="addformInfo">
         <el-form-item label="姓名" prop="username">
@@ -93,22 +104,72 @@
     </template>
   </el-dialog>
   <!-- 添加的对话框 end -->
+  <!-- 编辑的对话框 start-->
+  <el-dialog v-model="dialogEditVisible" title="编辑用户信息" width="35%">
+    <div class="dialog-body">
+      <el-form :inline="true" :model="editformInfo">
+        <el-form-item label="姓名" prop="username">
+          <el-input v-model="editformInfo.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="editformInfo.password" type="password" show-password></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="editformInfo.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="权限" prop="permission">
+          <el-select v-model="editformInfo.permission" placeholder="请选择一个选项">
+            <el-option label="管理员" value="admin" />
+            <el-option label="普通用户" value="vip" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="editformInfo.status" size="large" fill="#409eff">
+            <el-radio-button value="normal">正常</el-radio-button>
+            <el-radio-button value="abnormal">异常</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+    </div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogEditVisible = false">取消</el-button>
+        <el-button type="primary" @click="sureEditHandler"> 确定</el-button>
+      </div>
+    </template>
+  </el-dialog>
+  <!-- 编辑的对话框 end -->
 </template>
 <script setup>
-import { onMounted, ref, reactive } from 'vue'
+import { useLoginStore } from '@/stores/loginStore'
+const loginStore = useLoginStore()
+import { onMounted, computed, ref, reactive } from 'vue'
 import api from '@/api/index.js'
+
 //初始化总条数
 const total = ref(0)
 // 初始化分页显示数量
 const defaultPageSize = 16
 //保存当前页码
-const currentPage = ref(0)
+const currentPage = ref(1)
 //搜索初始化
 const searchInfo = ref('')
 //"添加对话框"初始化
 const dialogAddVisible = ref(false)
+//"编辑对话框"初始化
+const dialogEditVisible = ref(false)
+// 当前编辑按钮所选的 ID（用于更新接口）
+const editorID = ref(0)
 //"添加表单的数据"初始化
 const addformInfo = reactive({
+  username: '',
+  password: '',
+  phone: '',
+  permission: '',
+  status: '',
+})
+//"编辑表单的数据"初始化
+const editformInfo = reactive({
   username: '',
   password: '',
   phone: '',
@@ -181,7 +242,34 @@ const searchHandler = () => {
 const addHandler = () => {
   dialogAddVisible.value = true
 }
-//确定事件
+//编辑对话框的确定事件
+const sureEditHandler = () => {
+  api
+    .getupdateUser({
+      id: editorID.value,
+      password: editformInfo.password,
+      phone: editformInfo.phone,
+      permission: editformInfo.permission,
+      status: editformInfo.status,
+    })
+    .then((res) => {
+      if (res.data.status === 200) {
+        //关闭对话框
+        dialogEditVisible.value = false
+        //成功提示
+        ElMessage.success(res.data.msg)
+        //刷新页面
+        getUserList(currentPage.value)
+      } else {
+        //弹出错误弹窗并打印错误问题
+        ElMessage.error(res.data.msg)
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+//添加对话框的确定事件
 const sureHandler = () => {
   api
     .getaddUser({
@@ -241,6 +329,37 @@ const handleDelete = (index, row) => {
       ElMessage.warning('取消删除')
     })
 }
+///* 编辑按钮：预加载项目数据并打开编辑弹窗 */
+const handleEdit = (index, row) => {
+  // console.log(row.id)
+  editorID.value = row.id
+  api
+    .getpreviewUser({ id: row.id })
+    .then((res) => {
+      if (res.data.status === 200) {
+        //取数组里的第一条
+        const user = res.data.result[0]
+        editformInfo.username = user.username
+        editformInfo.password = user.password
+        editformInfo.phone = user.phone
+        editformInfo.permission = user.permission
+        editformInfo.status = user.status
+        //在数据加载完再出现弹窗
+        dialogEditVisible.value = true
+      } else {
+        ElMessage.error(res.data.msg)
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+//判断是否为管理员，不是则无法点击删除和编辑
+const isAdmin = computed(() => {
+  const result = loginStore.permission === 'admin'
+  return result
+})
 </script>
 <style scoped>
 /* 让整张表格拥有圆角并裁剪内部溢出 */

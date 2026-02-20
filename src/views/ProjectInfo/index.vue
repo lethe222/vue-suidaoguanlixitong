@@ -231,9 +231,9 @@
 import api from '@/api/index'
 import { onMounted, reactive, ref } from 'vue'
 import { dateFormater } from '@/utils/utils'
-/* tingmce引入 */
+/* 富文本tingmce编辑器组件引入 */
 import tingmceEditor from '@/components/tingmceEditor.vue'
-//定义修改数据的唯一ID
+// 当前编辑按钮所选的 ID（用于更新接口）
 const editorID = ref(0)
 /* 记录当前页码 */
 const currentPage = ref(1)
@@ -340,7 +340,7 @@ const headerClass = () => {
     padding: '12px 0',
   }
 }
-/* 编辑/删除 */
+/* 编辑按钮：预加载项目数据并打开编辑弹窗 */
 const handleEdit = (index, row) => {
   // console.log(index, row)
   editorID.value = row.id
